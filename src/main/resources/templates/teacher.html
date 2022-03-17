@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Авторизация</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/index.css}"/>
+    <script type="text/javascript" th:src="@{/js/teacher.js}"></script>
+
+</head>
+<body onload="changeColor()">
+
+<div class="myContainer">
+
+    <h1 th:text="'Журнал: ' + ${teacher.first_name} + ' ' + ${teacher.last_name}" class="mt-3"></h1>
+
+    <form method="post" th:action="@{/teacher}">
+        <span class="labelAndSelect">
+            <h5 class="label label-default">Выберите класс:</h5>
+            <select id="selectedClass" name="selectedClass" class="form-select selectForm">
+                <option th:each="t: ${teacher.classes}" th:value="${t}" th:text="${t}"></option>
+            </select>
+        </span>
+
+        <span class="labelAndSelect">
+            <h5 class="label label-default">Выберите предмет:</h5>
+            <select id="selectedSubject" name="selectedSubject" class="form-select selectForm">
+                <option th:each="t: ${teacher.subjects}" th:value="${t}" th:text="${t}"></option>
+            </select>
+        </span>
+
+        <span class="labelAndSelect">
+            <button type="submit" class="btn btn-info btn-md">Отобразить оценки</button>
+        </span>
+    </form>
+
+    <table class="table table-primary mt-5">
+      <thead class="table-dark">
+        <tr>
+          <th class="names" scope="col">Имя</th>
+          <th class="names" scope="col">Фамилия</th>
+          <th scope="col">Оценки</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="pupil, stats : ${pupils}">
+          <td th:text="${pupil.firstName}" class="names"></td>
+          <td th:text="${pupil.lastName}" class="names"></td>
+          <td><span class="border borderMark" th:each="key: ${pupil.currentSubjectMarks.keySet()}" th:text="${pupil.currentSubjectMarks.get(key)}"></span></td>
+        </tr>
+      </tbody>
+    </table>
+
+
+</div>
+</body>
+</html>

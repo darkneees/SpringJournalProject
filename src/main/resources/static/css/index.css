@@ -1,0 +1,20 @@
+.selectForm {
+	display: inline;
+	width: 200px;	
+}
+
+.labelAndSelect {
+	display: inline-block;
+}
+
+.myContainer {
+    width: 100%;
+    padding-right: 50px;
+    padding-left: 50px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.names {
+	width:400px;
+}
