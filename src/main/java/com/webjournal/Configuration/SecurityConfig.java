@@ -1,11 +1,14 @@
 package com.webjournal.Configuration;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 
 import javax.sql.DataSource;
 
@@ -32,15 +35,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http
                 .authorizeRequests()
-                .antMatchers("/").hasAnyRole("teacher")
+                .antMatchers("/teacher").hasAnyAuthority("teacher") //  Почитать про роли
+                .antMatchers("/admin").hasAnyAuthority("admin")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
+                .successHandler(myAuthenticationSuccessHandler())
                 .loginPage("/login")
                 .permitAll()
                 .and()
                 .logout()
+                .logoutUrl("/logout")
+                .addLogoutHandler(new SecurityContextLogoutHandler())
                 .permitAll();
+    }
 
+    @Bean
+    public AuthenticationSuccessHandler myAuthenticationSuccessHandler(){
+        return new CustomUrlAuthenticationSuccessHandler();
     }
 }

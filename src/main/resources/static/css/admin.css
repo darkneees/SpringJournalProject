@@ -1,0 +1,110 @@
+/* Убираем внешние отступы */
+body,
+h1,
+h2,
+h3,
+h4,
+p,
+ul[class],
+ol[class],
+li,
+figure,
+figcaption,
+blockquote,
+dl,
+dd {
+  margin: 0;
+}
+
+body {
+  background-image: linear-gradient(#FFF, #FFB560);
+  background-repeat: no-repeat;
+  min-height: 1080px;
+}
+
+
+.titleInfo{
+  margin-left: 20px;
+}
+
+.textLink {
+  margin-top: 10px;
+  font-size: 16px;
+  text-decoration: none;
+  color: #000000;
+  margin-right: 20px;
+}
+
+.textLink:hover {
+  text-decoration: underline;
+  color: #000000;
+}
+
+.ticket {
+  background-color: rgba(116, 241, 252, 0.35);
+  border-bottom: 2px solid black;
+}
+
+.image {
+  margin-top:30px;
+  width: 50%;
+  height: 50%;
+}
+
+.btnDelete {
+    float:right;
+}
+
+body {
+  background-color: #757575;
+}
+
+.container {
+  width: 50%;
+  margin: auto;
+  padding: 10px;
+}
+
+.accordion {
+	margin-top: 10px;
+	background-color: #eee;
+	color: #444;
+	cursor: pointer;
+	padding: 18px;
+	width: 100%;
+	text-align: left;
+	border: none;
+	outline: none;
+	transition: 0.4s;
+}
+
+.active,
+.accordion:hover {
+  background-color: #ccc;
+}
+
+.panel {
+  padding: 0 18px;
+  background-color: white;
+  display: none;
+  overflow: hidden;
+}
+
+.accordion:after {
+  /* Unicode character for "plus" sign (+) */
+  content: "\02795";
+  font-size: 13px;
+  color: #777;
+  float: right;
+  margin-left: 5px;
+}
+
+.active:after {
+  /* Unicode character for "minus" sign (-) */
+  content: "\2796";
+}
+
+.avatar {
+	width: 150px;
+	height: 150px;
+}

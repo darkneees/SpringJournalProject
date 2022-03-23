@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Авторизация</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/admin.css}"/>
+    <script type="text/javascript" th:src="@{/js/jquery-3.6.0.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/admin.js}"></script>
+</head>
+<body>
+
+<div class="d-flex flex-column flex-md-row align-items-center pb-3 border-bottom" style="margin-top: 20px;">
+    <span class="fs-4 titleInfo">Список билетов</span>
+    <nav class="d-inline-flex mt-2 mt-md-0 ms-md-auto">
+        <a class="textLink" href="">Выйти</a>
+        <a class="textLink" href="">Добавить пользователя</a>
+    </nav>
+</div>
+
+<div th:each="teacher, iter: ${teacher_list}" class="ticket p-3 rounded">
+        <span>
+            <a href="" class="btn btn-danger btn-sm btnDelete">Удалить</a>
+            <a style="margin-left: 10px" href="" class="btn btn-danger btn-sm btnDelete">Редактировать</a>
+            <h3 th:text="${teacher.first_name} + ' ' + ${teacher.last_name}"></h3><br>
+            <img class="avatar" th:src="@{/images/avatar.png}">
+        </span>
+    <div class="accordion-contianer">
+        <button class="accordion">Дополнительная информация</button>
+        <div class="panel">
+            <table class="table table-primary mt-5">
+                <thead class="table-dark">
+                <tr>
+                    <th class="names" scope="col">Предмет</th>
+                    <th class="names" scope="col">Класс</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="clSub: ${teacher.classesAndSubjects.keySet()}">
+                    <td th:text="${clSub}"></td>
+                    <td th:text="${teacher.classesAndSubjects.get(clSub)}"></td>
+                    <td><a class="border borderMark btn btn-danger">Удалить</a></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

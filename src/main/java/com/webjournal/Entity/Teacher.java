@@ -1,5 +1,7 @@
 package com.webjournal.Entity;
 
+import org.json.JSONArray;
+
 import javax.persistence.*;
 import java.util.List;
 import java.util.Map;
@@ -20,28 +22,17 @@ public class Teacher {
     @Column(name = "last_name")
     private String last_name;
 
-    @Column(name = "classes")
+    @Column(name = "classes_and_subjects")
     @Convert(converter = TeacherConverter.class)
-    private List<Map<String, Object>> classes;
+    private Map<String, Object> classesAndSubjects;
 
-    @Column(name = "subjects")
-    @Convert(converter = TeacherConverter.class)
-    private List<Map<String, Object>> subjects;
 
-    public List<Map<String, Object>> getClasses() {
-        return classes;
+    public Map<String, Object> getClassesAndSubjects() {
+        return classesAndSubjects;
     }
 
-    public void setClasses(List<Map<String, Object>> classes) {
-        this.classes = classes;
-    }
-
-    public List<Map<String, Object>> getSubjects() {
-        return subjects;
-    }
-
-    public void setSubjects(List<Map<String, Object>> subjects) {
-        this.subjects = subjects;
+    public void setClassesAndSubjects(Map<String, Object> classesAndSubjects) {
+        this.classesAndSubjects = classesAndSubjects;
     }
 
     public String getFirst_name() {
@@ -66,8 +57,7 @@ public class Teacher {
                 "username='" + username + '\'' +
                 ", first_name='" + first_name + '\'' +
                 ", last_name='" + last_name + '\'' +
-                ", classes=" + classes +
-                ", subjects=" + subjects +
+                ", classesAndSubjects=" + classesAndSubjects +
                 '}';
     }
 }
