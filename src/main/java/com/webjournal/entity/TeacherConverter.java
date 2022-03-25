@@ -1,4 +1,4 @@
-package com.webjournal.Entity;
+package com.webjournal.entity;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -9,20 +9,20 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-public class PupilConverter implements AttributeConverter<Map<String, Object>, String> {
+public class TeacherConverter implements AttributeConverter<Map<String, Object>, String> {
 
     ObjectMapper objectMapper = new ObjectMapper();
 
 
     @Override
     public String convertToDatabaseColumn(Map<String, Object> stringObjectMap) {
-        String pupilInfoJson = null;
+        String teacherInfoJson = null;
         try {
-            pupilInfoJson = objectMapper.writeValueAsString(stringObjectMap);
+            teacherInfoJson = objectMapper.writeValueAsString(stringObjectMap);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-        return pupilInfoJson;
+        return teacherInfoJson;
     }
 
     @Override

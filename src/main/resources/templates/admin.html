@@ -15,15 +15,15 @@
     <span class="fs-4 titleInfo">Список билетов</span>
     <nav class="d-inline-flex mt-2 mt-md-0 ms-md-auto">
         <a class="textLink" href="">Выйти</a>
-        <a class="textLink" href="">Добавить пользователя</a>
+        <a class="textLink" th:href="@{/admin/add}">Добавить Пользователя</a>
     </nav>
 </div>
 
-<div th:each="teacher, iter: ${teacher_list}" class="ticket p-3 rounded">
+<div th:each="u, iter: ${teachers}" class="ticket p-3 rounded">
         <span>
             <a href="" class="btn btn-danger btn-sm btnDelete">Удалить</a>
             <a style="margin-left: 10px" href="" class="btn btn-danger btn-sm btnDelete">Редактировать</a>
-            <h3 th:text="${teacher.first_name} + ' ' + ${teacher.last_name}"></h3><br>
+            <h3 th:text="${u.firstName} + ' ' + ${u.lastName}"></h3><br>
             <img class="avatar" th:src="@{/images/avatar.png}">
         </span>
     <div class="accordion-contianer">
@@ -38,9 +38,9 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="clSub: ${teacher.classesAndSubjects.keySet()}">
-                    <td th:text="${clSub}"></td>
-                    <td th:text="${teacher.classesAndSubjects.get(clSub)}"></td>
+                <tr th:each="t : ${u.getTeacher()}">
+                    <td th:text="${t.getSubject()}"></td>
+                    <td th:text="${t.getClassP()}"></td>
                     <td><a class="border borderMark btn btn-danger">Удалить</a></td>
                 </tr>
                 </tbody>

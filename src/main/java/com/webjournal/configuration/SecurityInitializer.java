@@ -1,4 +1,4 @@
-package com.webjournal.Configuration;
+package com.webjournal.configuration;
 
 import org.springframework.security.web.context.AbstractSecurityWebApplicationInitializer;
 

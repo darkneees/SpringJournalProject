@@ -1,0 +1,18 @@
+.elementsForm {
+    margin-top: 10px;
+}
+
+.formElement {
+    width: 700px;
+    margin: auto; 
+    margin-top: 7%;
+}
+
+.divElement {
+    padding: 40px 30px 30px 20px;
+}
+
+.labelAndSelect {
+    width: 250px;
+	display: inline-block;
+}

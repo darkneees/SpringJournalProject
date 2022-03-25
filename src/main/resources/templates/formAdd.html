@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/formAdd.css}"/>
+    <script type="text/javascript" th:src="@{/js/formAdd.js}"></script>
+
+</head>
+<body>
+
+<form method="post" th:action="@{/admin/add}" class="border formElement rounded border-primary">
+
+    <div id="mainElement" class="divElement">
+        <h2>Добавить пользователя</h2>
+
+        <div class="form-group elementsForm">
+            <select onchange="changeRole()" id="selectRole" name="selectRole" class="form-select selectForm">
+                <option th:value="ROLE_ADMIN" th:text="Администратор"></option>
+                <option th:value="ROLE_TEACHER" th:text="Учитель"></option>
+                <option th:value="PUPIL" th:text="Ученик"></option>
+            </select>
+        </div>
+
+        <div id="username_div" class="form-group elementsForm">
+            <label for="username">Имя пользователя</label>
+            <input required type="text" class="form-control" id="username" name="username" placeholder="Введите имя пользователя...">
+        </div>
+
+        <div id="password_div" class="form-group elementsForm">
+            <label for="username">Пароль</label>
+            <input required type="text" class="form-control" id="password" name="password" placeholder="Введите пароль...">
+        </div>
+
+        <div style="visibility: hidden" class="form-group elementsForm">
+            <label for="classP">Имя</label>
+            <input required type="text" class="form-control" id="classP" name="classP" placeholder="Введите класс...">
+        </div>
+
+        <div class="form-group elementsForm">
+            <label for="first_name">Имя</label>
+            <input required type="text" class="form-control" id="first_name" name="first_name" placeholder="Введите имя...">
+        </div>
+
+        <div class="form-group elementsForm">
+            <label for="last_name">Фамилия</label>
+            <input required type="text" class="form-control" id="last_name" name="last_name" placeholder="Введите фамилию...">
+        </div>
+
+        <button style="margin-top: 10px;" type="submit" class="elementsForm btn btn-primary btn-lg">Создать</button>
+    </div>
+
+    </div>
+</form>
+
+</body>
+</html>

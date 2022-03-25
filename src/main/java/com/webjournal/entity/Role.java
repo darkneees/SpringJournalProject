@@ -1,4 +1,4 @@
-package com.webjournal.Entity;
+package com.webjournal.entity;
 
 import org.springframework.security.core.GrantedAuthority;
 
@@ -6,14 +6,22 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-@Table(name = "authorities")
+@Table(name = "roles")
 public class Role implements GrantedAuthority {
 
     @Id
+    @Column(name = "id")
     private Long id;
+
+    @Column(name = "name_role")
     private String name;
 
-    public Role(Long id) {
+    @Transient
+    @ManyToMany(mappedBy = "roles")
+    private Set<User> users;
+
+    public Role(){}
+    public Role(Long id){
         this.id = id;
     }
 
@@ -21,7 +29,6 @@ public class Role implements GrantedAuthority {
         this.id = id;
         this.name = name;
     }
-
 
     public String getName() {
         return name;
@@ -38,12 +45,6 @@ public class Role implements GrantedAuthority {
     public void setUsers(Set<User> users) {
         this.users = users;
     }
-
-    @Transient
-    @ManyToMany(mappedBy = "roles")
-    private Set<User> users;
-
-    public Role(){}
 
     @Override
     public String getAuthority() {
