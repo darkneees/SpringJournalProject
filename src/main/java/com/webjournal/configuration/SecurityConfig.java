@@ -25,6 +25,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
+    @Bean
+    public AuthenticationSuccessHandler authenticationSuccessHandler(){
+        return new LoginAuthenticationSuccessHandler();
+    }
+
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers("/css/**", "/js/**");
@@ -40,6 +45,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/", "/resources/**").permitAll()
                 .anyRequest().authenticated()
                 .and().formLogin()
+                .successHandler(authenticationSuccessHandler())
                 .loginPage("/login").permitAll().and().logout().logoutUrl("/logout").addLogoutHandler(new SecurityContextLogoutHandler())
                 .permitAll();
     }

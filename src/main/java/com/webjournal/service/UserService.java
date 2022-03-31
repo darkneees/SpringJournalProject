@@ -12,4 +12,5 @@ public interface UserService {
     List<User> getUsersByRole(Set<Role> roles);
     void deleteUser(Long id);
     User getUserById(Long id);
+    User getUserByUsername(String username);
 }

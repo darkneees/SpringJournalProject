@@ -8,12 +8,12 @@
     <script type="text/javascript" th:src="@{/js/teacher.js}"></script>
 
 </head>
-<body onload="changeColor()">
+<body onload="changeColor(); initializePage()">
 
 <div class="myContainer">
 
     <span>
-        <h1 th:text="'Журнал: ' + ${teacher.first_name} + ' ' + ${teacher.last_name}" class="mt-3"></h1>
+        <h1 th:text="'Журнал: ' + ${user.firstName} + ' ' + ${user.lastName}" class="mt-3"></h1>
         <a th:href="@{/logout}" class="btn btn-primary btn-md">Выйти</a>
     </span>
 
@@ -22,21 +22,16 @@
             <span class="labelAndSelect">
 
                 <h5 class="label label-default">Выберите предмет:</h5>
-                <select id="selectedSubject" name="selectedSubject" class="form-select selectForm">
-                    <getkeySets th:each="t: ${teacher.classesAndSubjects}">
-                        <option th:each="keys: ${t.keySet()}" th:value="${keys}" th:text="${keys}"></option>
-                    </getkeySets>
+                <select onchange="selectClassFunc()" id="selectedSubject" name="selectedSubject" class="form-select selectForm">
+                    <option th:each="subject: ${user.teacher.classP.keySet()}" th:text="${subject}" th:value="${subject}"></option>
                 </select>
             </span>
 
-<!--            <span class="labelAndSelect">-->
-<!--                <h5 class="label label-default">Выберите класс:</h5>-->
-<!--                <select id="selectedClass" name="selectedClass" class="form-select selectForm">-->
-<!--                    <option th:each="t: ${teacher.classesAndSubjects}" th:value="${t}" th:text="${t.keySet()}"></option>-->
-<!--                </select>-->
-<!--            </span>-->
-
-
+            <span class="labelAndSelect">
+                <h5 class="label label-default">Выберите класс:</h5>
+                <select id="selectedClass" name="selectedClass" class="form-select selectForm">
+                </select>
+            </span>
 
         <span class="labelAndSelect">
             <button type="submit" class="btn btn-info btn-md">Отобразить оценки</button>
@@ -52,15 +47,41 @@
         </tr>
       </thead>
       <tbody>
-        <tr th:each="pupil, stats : ${pupils}">
+        <tr th:each="pupil : ${pupils}">
           <td th:text="${pupil.firstName}" class="names"></td>
           <td th:text="${pupil.lastName}" class="names"></td>
-          <td><span class="border borderMark" th:each="key: ${pupil.currentSubjectMarks.keySet()}" th:text="${pupil.currentSubjectMarks.get(key)}"></span></td>
+          <td><span class="border borderMark" th:each="key: ${pupil.data.get(subject)}" th:text="${}"></span></td>
         </tr>
       </tbody>
     </table>
 
 
 </div>
+
+<script th:inline="javascript">
+
+    function selectClassFunc(){
+
+        let subject = document.getElementById("selectedSubject").value;
+        let classSelect = document.getElementById("selectedClass");
+        while (classSelect.options.length > 0) {
+            classSelect.remove(0);
+        }
+        var classP = [[${user.teacher.classP}]];
+
+        for(let i = 0; i < classP[subject].length; i++) {
+            var opt = document.createElement('option');
+            opt.value = classP[subject][i];
+            opt.innerHTML = classP[subject][i];
+            classSelect.appendChild(opt);
+        }
+    }
+
+    function initializePage(){
+        selectClassFunc();
+    }
+
+
+</script>
 </body>
 </html>

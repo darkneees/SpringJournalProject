@@ -3,6 +3,7 @@ package com.webjournal.entity;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Map;
 
 @Entity
@@ -25,7 +26,7 @@ public class Pupil {
 
     @Type(type = "json")
     @Column(name = "data", columnDefinition = "json")
-    private Map<String, Object> data;
+    private Map<String, List<Map<String, String>>> data;
 
     public Pupil() {
     }
@@ -54,11 +55,11 @@ public class Pupil {
         this.classP = classP;
     }
 
-    public Map<String, Object> getData() {
+    public Map<String, List<Map<String, String>>> getData() {
         return data;
     }
 
-    public void setData(Map<String, Object> data) {
+    public void setData(Map<String, List<Map<String, String>>> data) {
         this.data = data;
     }
 }

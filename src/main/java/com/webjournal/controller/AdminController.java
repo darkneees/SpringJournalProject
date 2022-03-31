@@ -48,21 +48,22 @@ public class AdminController {
     }
 
     @PostMapping("/admin/add")
-    public RedirectView addAdminInDb(@RequestParam("username") String username, @RequestParam("password") String password, @RequestParam("first_name") String firstName, @RequestParam("last_name") String lastName, @RequestParam("selectRole") String role, @RequestParam("classP") String classP){
+    public RedirectView addAdminInDb(@RequestParam("username") String username,
+                                     @RequestParam("password") String password,
+                                     @RequestParam("first_name") String firstName,
+                                     @RequestParam("last_name") String lastName,
+                                     @RequestParam("selectRole") String role,
+                                     @RequestParam("classP") String classP){
 
         if (role.equals("Ученик")) {
-
             Pupil pupil = new Pupil();
             pupil.setFirstName(firstName);
             pupil.setLastName(lastName);
             pupil.setClassP(classP);
-
             pupilService.addPupil(pupil);
 
         } else {
-
             User user = new User();
-
             if (role.equals("ROLE_ADMIN"))
                 user.setRoles(Collections.singleton(new Role(1L, "ROLE_ADMIN", "Администратор")));
 
@@ -70,13 +71,11 @@ public class AdminController {
                 user.setRoles(Collections.singleton(new Role(2L, "ROLE_TEACHER", "Преподаватель")));
                 user.setTeacher(new Teacher());
             }
-
             user.setUsername(username);
             user.setPassword(password);
             user.setFirstName(firstName);
             user.setLastName(lastName);
             userService.saveUser(user);
-
         }
         return new RedirectView("/admin/add");
 
@@ -98,7 +97,8 @@ public class AdminController {
     }
 
     @PostMapping("/admin/add/class/{id}")
-    public RedirectView addTeachClass(@PathVariable Long id, @RequestParam String selectSubject, @RequestParam String classP){
+    public RedirectView addTeachClass(@PathVariable Long id, @RequestParam String selectSubject,
+                                      @RequestParam String classP){
 
         teacherService.changeTeacherClass(userService.getUserById(id), classP, selectSubject);
         return new RedirectView("/admin");
@@ -113,11 +113,8 @@ public class AdminController {
     }
 
     @PostMapping("/admin/delete/class/{id}/{class_t}")
-    public RedirectView deleteTeachSubject(@PathVariable Long id, @PathVariable String class_t, @RequestParam("selectedSubject") String selectedSubject) {
-
-        System.out.println(id);
-        System.out.println(class_t);
-        System.out.println(selectedSubject);
+    public RedirectView deleteTeachSubject(@PathVariable Long id, @PathVariable String class_t,
+                                           @RequestParam("selectedSubject") String selectedSubject) {
 
         teacherService.deleteSubjectInClass(userService.getUserById(id), class_t, selectedSubject);
         return new RedirectView("/admin");
