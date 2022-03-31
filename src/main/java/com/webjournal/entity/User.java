@@ -5,15 +5,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 
 @Entity
 @Table(name = "users")
 public class User implements UserDetails {
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    private List<Teacher> teacher;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,11 +34,20 @@ public class User implements UserDetails {
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles;
 
-    public List<Teacher> getTeacher() {
+    @OneToOne(cascade = CascadeType.ALL)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JoinColumn(name = "teacher_id")
+    private Teacher teacher;
+
+    public Long getId() {
+        return id;
+    }
+
+    public Teacher getTeacher() {
         return teacher;
     }
 
-    public void setTeacher(List<Teacher> teacher) {
+    public void setTeacher(Teacher teacher) {
         this.teacher = teacher;
     }
 
@@ -127,13 +132,14 @@ public class User implements UserDetails {
     @Override
     public String toString() {
         return "User{" +
-                "teacher=" + teacher +
-                ", id=" + id +
+                "id=" + id +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
+                ", passwordConfirm='" + passwordConfirm + '\'' +
                 ", roles=" + roles +
+                ", teacher=" + teacher.toString() +
                 '}';
     }
 }

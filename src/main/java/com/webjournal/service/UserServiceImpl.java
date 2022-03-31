@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -44,10 +43,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         return user;
     }
 
-    public List<User> getAllUsers(){
-        return userRepository.findAll();
-    }
-
     public boolean saveUser(User user) {
         User userFromDb = userRepository.findByUsername(user.getUsername());
 
@@ -63,5 +58,14 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     @Override
     public List<User> getUsersByRole(Set<Role> roles) {
         return userRepository.findByRolesIn(roles);
+    }
+
+    @Override
+    public void deleteUser(Long id) {
+        userRepository.deleteById(id);
+    }
+
+    public User getUserById(Long id) {
+        return userRepository.findById(id).get();
     }
 }

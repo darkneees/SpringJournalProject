@@ -5,8 +5,7 @@ import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.*;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @SuppressWarnings("JpaAttributeTypeInspection")
 @Entity
@@ -22,18 +21,9 @@ public class Teacher {
     @Column(name = "id")
     private Long id;
 
-    @Transient
-    @ManyToMany(mappedBy = "teachers")
-    private List<User> user;
-
-
     @Type(type = "json")
-    @Column(name = "class", columnDefinition = "json")
-    private Map<String, Object> classP;
-
-    @Type(type = "json")
-    @Column(name = "subject", columnDefinition = "json")
-    private Map<String, Object> subject;
+    @Column(name = "classes_and_subjects", columnDefinition = "json")
+    private Map<String, ArrayList<String>> classP;
 
     public Teacher() {
     }
@@ -42,27 +32,43 @@ public class Teacher {
         this.id = id;
     }
 
-    public List<User> getUser() {
-        return user;
-    }
-
-    public void setUser(List<User> user) {
-        this.user = user;
-    }
-
-    public Map<String, Object> getClassP() {
+    public Map<String, ArrayList<String>> getClassP() {
         return classP;
     }
 
-    public void setClassP(Map<String, Object> classP) {
+    public void setClassP(Map<String, ArrayList<String>> classP) {
         this.classP = classP;
     }
 
-    public Map<String, Object> getSubject() {
-        return subject;
+    public void addClassP(String key, ArrayList<String> values){
+        if(classP == null) {
+            classP = new HashMap<>();
+            classP.put(key, values);
+        } else {
+            if(classP.containsKey(key)){
+                ArrayList<String> list = classP.get(key);
+                list.addAll(values);
+                classP.replace(key, list);
+            } else {
+            classP.put(key, values);
+            }
+        }
     }
 
-    public void setSubject(Map<String, Object> subject) {
-        this.subject = subject;
+    public void deleteClassP(String key) {
+        classP.remove(key);
+    }
+
+    public void deleteSubjectInClass(String key, String subject){
+        if(classP.containsKey(key)) {
+            ArrayList<String> list = classP.get(key);
+            list.remove(subject);
+            if(list.isEmpty()) deleteClassP(key);
+            else classP.replace(key, list);
+        }
+    }
+
+    public Long getId() {
+        return id;
     }
 }

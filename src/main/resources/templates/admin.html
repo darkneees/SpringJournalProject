@@ -5,6 +5,7 @@
     <title>Авторизация</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
     <link rel="stylesheet" th:href="@{/css/admin.css}"/>
+    <link rel="stylesheet" th:href="@{/css/index.css}"/>
     <script type="text/javascript" th:src="@{/js/jquery-3.6.0.min.js}"></script>
     <script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
     <script type="text/javascript" th:src="@{/js/admin.js}"></script>
@@ -19,12 +20,29 @@
     </nav>
 </div>
 
-<div th:each="u, iter: ${teachers}" class="ticket p-3 rounded">
+<div th:each="teacher: ${teachers}" class="ticket p-3 rounded">
         <span>
-            <a href="" class="btn btn-danger btn-sm btnDelete">Удалить</a>
-            <a style="margin-left: 10px" href="" class="btn btn-danger btn-sm btnDelete">Редактировать</a>
-            <h3 th:text="${u.firstName} + ' ' + ${u.lastName}"></h3><br>
+            <form method="post" th:action="@{'/admin/delete/' + ${teacher.id}}">
+                <button class="btn btn-danger btn-sm btnDelete">Удалить</button>
+            </form>
+            <form method="post" th:action="@{'/admin/edit/' + ${teacher.id}}">
+                <button style="margin-right: 10px" class="btn btn-danger btn-sm btnDelete">Редактировать</button>
+            </form>
+            <h3 th:text="${teacher.firstName} + ' ' + ${teacher.lastName}"></h3><br>
             <img class="avatar" th:src="@{/images/avatar.png}">
+            <form style="margin-top: 10px;" method="post" th:action="@{'/admin/add/class/' + ${teacher.id}}">
+                <select class="form-select" id="selectSubject" name="selectSubject">
+                    <option>Математика</option>
+                    <option>Русский язык</option>
+                    <option>Английский язык</option>
+                    <option>Химия</option>
+                    <option>Физика</option>
+                    <option>Физкультура</option>
+                </select>
+                <label for="classP">Введите класс</label>
+                <input type="text" class="form-control" id="classP" name="classP" placeholder="Введите класс...">
+                <button style="margin-top: 10px;" type="submit" class="elementsForm btn btn-primary btn-sm">Добавить</button>
+            </form>
         </span>
     <div class="accordion-contianer">
         <button class="accordion">Дополнительная информация</button>
@@ -32,16 +50,31 @@
             <table class="table table-primary mt-5">
                 <thead class="table-dark">
                 <tr>
+                    <th class="names" scope="col">Удаление предмета</th>
                     <th class="names" scope="col">Предмет</th>
                     <th class="names" scope="col">Класс</th>
-                    <th></th>
+                    <th class="names" scope="col">Удалить класс</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="t : ${u.getTeacher()}">
-                    <td th:text="${t.getSubject()}"></td>
-                    <td th:text="${t.getClassP()}"></td>
-                    <td><a class="border borderMark btn btn-danger">Удалить</a></td>
+                <tr th:each="t : ${teacher.teacher.classP}" >
+                    <td>
+                        <form method="post" th:action="@{'/admin/delete/subject/' + ${teacher.id} + '/' + ${t.key}}">
+                            <button class="btn btn-danger btn-sm">Удалить</button>
+                        </form>
+                    </td>
+                    <td th:text="${t.key}"></td>
+                    <td th:text="${t.value}"></td>
+                    <td>
+                        <form method="post" th:action="@{'/admin/delete/class/' + ${teacher.id} + '/' + ${t.key}}">
+                            <span>
+                                <button class="btn btn-danger btn-sm">Удалить</button>
+                                <select class="form-select selectForm" id="selectedSubject" name="selectedSubject">
+                                    <option th:each="subject: ${t.value}" th:text="${subject}"></option>
+                                </select>
+                            </span>
+                        </form>
+                    </td>
                 </tr>
                 </tbody>
             </table>

@@ -1,18 +1,18 @@
 package com.webjournal.controller;
 
-
 import com.webjournal.entity.Pupil;
 import com.webjournal.entity.Role;
+import com.webjournal.entity.Teacher;
 import com.webjournal.entity.User;
 import com.webjournal.service.PupilServiceImpl;
+import com.webjournal.service.RoleServiceImpl;
 import com.webjournal.service.TeacherServiceImpl;
 import com.webjournal.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.Collections;
 import java.util.List;
@@ -29,27 +29,28 @@ public class AdminController {
     @Autowired
     PupilServiceImpl pupilService;
 
+    @Autowired
+    RoleServiceImpl roleService;
+
 
     @GetMapping("/admin")
     public String getAdminPage(Model model){
-
         List<User> teachers = userService.getUsersByRole(Collections.singleton(new Role(2L)));
-        System.out.println(teachers);
-
         model.addAttribute("teachers", teachers);
 
         return "admin";
     }
 
     @GetMapping("/admin/add")
-    public String getFormAddAdmin(){
+    public String getFormAddAdmin(Model model){
+        model.addAttribute("roles", roleService.getRoles());
         return "formAdd";
     }
 
     @PostMapping("/admin/add")
-    public String addAdminInDb(@RequestParam("username") String username, @RequestParam("password") String password, @RequestParam("first_name") String firstName, @RequestParam("last_name") String lastName, @RequestParam("selectRole") String role, @RequestParam("classP") String classP){
+    public RedirectView addAdminInDb(@RequestParam("username") String username, @RequestParam("password") String password, @RequestParam("first_name") String firstName, @RequestParam("last_name") String lastName, @RequestParam("selectRole") String role, @RequestParam("classP") String classP){
 
-        if (role.equals("PUPIL")) {
+        if (role.equals("Ученик")) {
 
             Pupil pupil = new Pupil();
             pupil.setFirstName(firstName);
@@ -58,17 +59,17 @@ public class AdminController {
 
             pupilService.addPupil(pupil);
 
-            return "formAdd";
-
         } else {
 
             User user = new User();
 
             if (role.equals("ROLE_ADMIN"))
-                user.setRoles(Collections.singleton(new Role(1L, "ROLE_ADMIN")));
+                user.setRoles(Collections.singleton(new Role(1L, "ROLE_ADMIN", "Администратор")));
 
-            else if (role.equals("ROLE_TEACHER"))
-                user.setRoles(Collections.singleton(new Role(2L, "ROLE_TEACHER")));
+            else if (role.equals("ROLE_TEACHER")) {
+                user.setRoles(Collections.singleton(new Role(2L, "ROLE_TEACHER", "Преподаватель")));
+                user.setTeacher(new Teacher());
+            }
 
             user.setUsername(username);
             user.setPassword(password);
@@ -76,10 +77,49 @@ public class AdminController {
             user.setLastName(lastName);
             userService.saveUser(user);
 
-            return "formAdd";
         }
+        return new RedirectView("/admin/add");
 
     }
 
+    @PostMapping("/admin/delete/{id}")
+    public RedirectView deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
+        return new RedirectView("/admin");
+    }
 
+
+    @PostMapping("/admin/edit/{id}")
+    public String editUser(@PathVariable Long id, Model model) {
+        model.addAttribute("user", userService.getUserById(id));
+        model.addAttribute("roles", roleService.getRoles());
+
+        return "formEdit";
+    }
+
+    @PostMapping("/admin/add/class/{id}")
+    public RedirectView addTeachClass(@PathVariable Long id, @RequestParam String selectSubject, @RequestParam String classP){
+
+        teacherService.changeTeacherClass(userService.getUserById(id), classP, selectSubject);
+        return new RedirectView("/admin");
+    }
+
+    @PostMapping("/admin/delete/subject/{id}/{class_t}")
+    public RedirectView deleteTeachClass(@PathVariable Long id, @PathVariable String class_t) {
+
+        teacherService.deleteWhereClass(userService.getUserById(id), class_t);
+
+        return new RedirectView("/admin");
+    }
+
+    @PostMapping("/admin/delete/class/{id}/{class_t}")
+    public RedirectView deleteTeachSubject(@PathVariable Long id, @PathVariable String class_t, @RequestParam("selectedSubject") String selectedSubject) {
+
+        System.out.println(id);
+        System.out.println(class_t);
+        System.out.println(selectedSubject);
+
+        teacherService.deleteSubjectInClass(userService.getUserById(id), class_t, selectedSubject);
+        return new RedirectView("/admin");
+    }
 }
