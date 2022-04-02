@@ -3,6 +3,8 @@ package com.webjournal.entity;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -61,5 +63,31 @@ public class Pupil {
 
     public void setData(Map<String, List<Map<String, String>>> data) {
         this.data = data;
+    }
+
+    public void addMarkInData(String subject, String date, String mark){
+        if(data == null) {
+            data = new HashMap<>();
+                List<Map<String, String>> temp = new ArrayList<>();
+                HashMap<String, String> hashMap = new HashMap<>();
+                hashMap.put(date, mark);
+                temp.add(hashMap);
+                data.put(subject, temp);
+            } else {
+                if(data.containsKey(subject)) {
+                    List<Map<String, String>> temp = data.get(subject);
+                    for(Map<String, String> elem: temp) {
+                        if(elem.containsKey(date)) {
+                            elem.replace(date, mark);
+                        } else {
+                            elem.put(date, mark);
+                        }
+                    }
+                }
+        }
+    }
+
+    public Long getId() {
+        return id;
     }
 }

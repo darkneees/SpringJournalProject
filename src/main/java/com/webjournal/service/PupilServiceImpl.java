@@ -21,4 +21,13 @@ public class PupilServiceImpl implements PupilService {
     public List<Pupil> findPupilsByClassP(String classP) {
         return pupilRepository.findAllByClassP(classP);
     }
+
+    @Override
+    public void addMarkPupil(Long id, String subject, String date, String mark) {
+        Pupil pupil = pupilRepository.findById(id).get();
+
+        pupil.addMarkInData(subject, date, mark);
+
+        pupilRepository.save(pupil);
+    }
 }

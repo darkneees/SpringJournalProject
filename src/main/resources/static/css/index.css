@@ -18,3 +18,8 @@
 .names {
 	width:400px;
 }
+
+.btnLogout {
+    float: right;
+    width: 175px;
+}

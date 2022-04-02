@@ -17,4 +17,4 @@ UPDATE teachers SET classes_and_subjects='{
   "8A": ["Математика", "Биология", "Геометрия"]
 }' WHERE id=1;
 
-INSERT INTO pupils (first_name, last_name, class) VALUES('Андрей','Нестеров', '8A');
+INSERT INTO pupils (first_name, last_name, class) VALUES('Андрей','Нестеров', '30G');

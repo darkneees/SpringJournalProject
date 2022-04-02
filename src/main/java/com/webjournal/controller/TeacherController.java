@@ -10,8 +10,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.view.RedirectView;
 
 @Controller
 public class TeacherController {
@@ -43,6 +45,15 @@ public class TeacherController {
         model.addAttribute("user", getUser());
 
         return "teacher";
+    }
+
+    @PostMapping("/teacher/mark/{id}/{subject}")
+    public RedirectView addPupilMark(@PathVariable Long id, @PathVariable String subject,
+                               @RequestParam("date") String date, @RequestParam("mark") String mark) {
+
+        pupilService.addMarkPupil(id, subject, date, mark);
+
+        return new RedirectView("/teacher");
     }
 
     private User getUser(){
