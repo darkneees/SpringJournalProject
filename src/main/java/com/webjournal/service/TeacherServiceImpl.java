@@ -40,11 +40,12 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public void deleteSubjectInClass(User user, String classP, String subject){
+    public Teacher deleteSubjectInClass(User user, String classP, String subject){
         Teacher teacher = user.getTeacher();
-        teacher.deleteSubjectInClass(classP, subject);
+        teacher.deleteSubjectInClass(subject, classP);
 
         teacherRepository.save(teacher);
+        return teacher;
     }
 
 

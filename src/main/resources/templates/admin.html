@@ -22,9 +22,7 @@
 
 <div th:each="teacher: ${teachers}" class="ticket p-3 rounded">
         <span>
-            <form method="post" th:action="@{'/admin/delete/' + ${teacher.id}}">
-                <button class="btn btn-danger btn-sm btnDelete">Удалить</button>
-            </form>
+            <button th:id="${teacher.id}" class="btn btn-danger btn-sm btnDelete">Удалить</button>
             <form method="post" th:action="@{'/admin/edit/' + ${teacher.id}}">
                 <button style="margin-right: 10px" class="btn btn-danger btn-sm btnDelete">Редактировать</button>
             </form>
@@ -59,21 +57,17 @@
                 <tbody>
                 <tr th:each="t : ${teacher.teacher.classP}" >
                     <td>
-                        <form method="post" th:action="@{'/admin/delete/subject/' + ${teacher.id} + '/' + ${t.key}}">
-                            <button class="btn btn-danger btn-sm">Удалить</button>
-                        </form>
+                        <button th:id="${teacher.id} + '/' + ${t.key}" class="btnDeleteSubject btn btn-danger btn-sm">Удалить</button>
                     </td>
                     <td th:text="${t.key}"></td>
-                    <td th:text="${t.value}"></td>
+                    <td class="subjects" th:text="${t.value}"></td>
                     <td>
-                        <form method="post" th:action="@{'/admin/delete/class/' + ${teacher.id} + '/' + ${t.key}}">
-                            <span>
-                                <button class="btn btn-danger btn-sm">Удалить</button>
-                                <select class="form-select selectForm" id="selectedSubject" name="selectedSubject">
-                                    <option th:each="subject: ${t.value}" th:text="${subject}"></option>
-                                </select>
-                            </span>
-                        </form>
+                        <span>
+                            <button th:id="${teacher.id} + '/' + ${t.key}" class="btnDeleteClass btn btn-danger btn-sm">Удалить</button>
+                            <select class="form-select selectForm" id="selectedClass" name="selectedClass">
+                                <option th:each="subject: ${t.value}" th:text="${subject}"></option>
+                            </select>
+                        </span>
                     </td>
                 </tr>
                 </tbody>

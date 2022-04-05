@@ -5,14 +5,13 @@ import com.webjournal.service.PupilServiceImpl;
 import com.webjournal.service.TeacherServiceImpl;
 import com.webjournal.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
 @Controller
@@ -40,6 +39,8 @@ public class TeacherController {
                                           @RequestParam("selectedClass") String selectedClass,
                                           @RequestParam("selectedSubject") String selectedSubject) {
 
+        System.out.println("post");
+
         model.addAttribute("pupils", pupilService.findPupilsByClassP(selectedClass));
         model.addAttribute("subject", selectedSubject);
         model.addAttribute("user", getUser());
@@ -48,12 +49,11 @@ public class TeacherController {
     }
 
     @PostMapping("/teacher/mark/{id}/{subject}")
-    public RedirectView addPupilMark(@PathVariable Long id, @PathVariable String subject,
-                               @RequestParam("date") String date, @RequestParam("mark") String mark) {
+    @ResponseBody
+    public void addPupilMark(@PathVariable Long id, @PathVariable String subject,
+                                       @RequestParam("date") String date, @RequestParam("mark") String mark) {
 
         pupilService.addMarkPupil(id, subject, date, mark);
-
-        return new RedirectView("/teacher");
     }
 
     private User getUser(){

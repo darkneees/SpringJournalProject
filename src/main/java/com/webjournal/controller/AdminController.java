@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -105,18 +106,23 @@ public class AdminController {
     }
 
     @PostMapping("/admin/delete/subject/{id}/{class_t}")
-    public RedirectView deleteTeachClass(@PathVariable Long id, @PathVariable String class_t) {
+    @ResponseBody
+    public String deleteTeachClass(@PathVariable Long id, @PathVariable String class_t) {
 
         teacherService.deleteWhereClass(userService.getUserById(id), class_t);
 
-        return new RedirectView("/admin");
+        return "{result: success}";
     }
 
-    @PostMapping("/admin/delete/class/{id}/{class_t}")
-    public RedirectView deleteTeachSubject(@PathVariable Long id, @PathVariable String class_t,
-                                           @RequestParam("selectedSubject") String selectedSubject) {
+    @PostMapping("/admin/delete/class/{id}/{selectedSubject}")
+    @ResponseBody
+    public String deleteTeachSubject(@PathVariable Long id, @PathVariable String selectedSubject,
+                                           @RequestParam("selectedClass") String selectedClass) {
 
-        teacherService.deleteSubjectInClass(userService.getUserById(id), class_t, selectedSubject);
-        return new RedirectView("/admin");
+        Teacher teacher = teacherService.deleteSubjectInClass(userService.getUserById(id), selectedClass, selectedSubject);
+        System.out.println(teacher.toString());
+
+        return "{\"result\": \"success\", \"data\": \"" + teacher.getClassP().get(selectedSubject) + "\"}";
+
     }
 }

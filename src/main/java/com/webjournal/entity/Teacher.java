@@ -71,4 +71,12 @@ public class Teacher {
     public Long getId() {
         return id;
     }
+
+    @Override
+    public String toString() {
+        return "Teacher{" +
+                "id=" + id +
+                ", classP=" + classP +
+                '}';
+    }
 }

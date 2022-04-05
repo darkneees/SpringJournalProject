@@ -5,8 +5,8 @@
     <title>Авторизация</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
     <link rel="stylesheet" th:href="@{/css/index.css}"/>
+    <script type="text/javascript" th:src="@{/js/jquery-3.6.0.min.js}"></script>
     <script type="text/javascript" th:src="@{/js/teacher.js}"></script>
-
 </head>
 <body onload="changeColor(); initializePage()">
 
@@ -17,8 +17,9 @@
         <h1 th:text="'Журнал: ' + ${user.firstName} + ' ' + ${user.lastName}" class="mt-3"></h1>
     </div>
 
+
     <div style="margin-top: 30px;">
-        <form method="post" th:action="@{/teacher}">
+        <form id="checkMark" method="post" th:action="@{/teacher}">
             <h5 style="display: inline;" class="label label-default">Выберите предмет:</h5>
             <select onchange="selectClassFunc()" id="selectedSubject" name="selectedSubject" class="form-select selectForm">
                 <option th:each="subject: ${user.teacher.classP.keySet()}" th:text="${subject}" th:value="${subject}"></option>
@@ -26,7 +27,7 @@
             <h5 style="display: inline;" class="label label-default">Выберите класс:</h5>
             <select id="selectedClass" name="selectedClass" class="form-select selectForm">
             </select>
-            <button type="submit" class="btn btn-info btn-md" style="vertical-align: baseline;">Отобразить оценки</button>
+            <button class="btn btn-info btn-md" style="vertical-align: baseline;">Отобразить оценки</button>
         </form>
     </div>
 
@@ -43,16 +44,17 @@
             <tr th:each="pupil : ${pupils}">
                 <td th:text="${pupil.firstName}" class="names"></td>
                 <td th:text="${pupil.lastName}" class="names"></td>
-                <td><span class="border borderMark"></span></td>
+                <td><span th:id="'mark_' + ${pupil.id}" th:if="${pupil.getData() != null}" th:text="${pupil.getData().get(subject)}" class="border borderMark"></span>
+                </td>
                 <td>
-                    <form method="post" th:action="@{'/teacher/mark/' + ${pupil.id} + '/' + ${subject}}"><span class="labelAndSelect">
+                    <span class="labelAndSelect">
                     <label for="date">Дата:</label>
                     <input class="md-form md-outline input-with-post-icon datepicker"
                            type="date" id="date" name="date" min="2022-01-01" max="2023-12-31"/>
                     <label for="mark">Оценка</label>
                     <input type="text" style="width: 40px" id="mark" name="mark">
-                        <button style="vertical-align: baseline;" class="btn btn-dark btn-sm">+</button>
-                    </span></form>
+                        <a th:id="${pupil.id}" style="vertical-align: baseline;" class="btn btn-dark btn-sm btn-post">+</a>
+                    </span>
                 </td>
 
             </tr>
