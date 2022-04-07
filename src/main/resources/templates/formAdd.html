@@ -8,10 +8,11 @@
 
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
     <link rel="stylesheet" th:href="@{/css/formAdd.css}"/>
-    <script type="text/javascript" th:src="@{/js/formAdd.js}"></script>
+    <script type="text/javascript" th:src="@{/js/jquery-3.6.0.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/form.js}"></script>
 
 </head>
-<body onload="initPage()">
+<body>
 
 <form method="post" th:action="@{/admin/add}" class="border formElement rounded border-primary">
 
@@ -19,7 +20,7 @@
         <h2>Добавить пользователя</h2>
 
         <div class="form-group elementsForm">
-            <select onchange="changeRole()" id="selectRole" name="selectRole" class="form-select selectForm">
+            <select id="selectRole" name="selectRole" class="form-select selectForm">
                 <option th:each="role: ${roles}" th:value="${role.name}" th:text="${role.pretty_name}"></option>
                 <option th:text="Ученик"></option>
             </select>

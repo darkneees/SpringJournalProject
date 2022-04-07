@@ -6,7 +6,7 @@ import com.webjournal.entity.User;
 public interface TeacherService {
 
     Teacher getTeacher(Long id);
-    void changeTeacherClass(User user, String selectSubject, String classP);
-    void deleteWhereClass(User user, String classP);
-    Teacher deleteSubjectInClass(User user, String classP, String subject);
+    Teacher changeTeacherClass(User user, String selectSubject, String classP);
+    void deleteWhereSubject(User user, String subject);
+    Teacher deleteClassInSubject(User user, String classP, String subject);
 }

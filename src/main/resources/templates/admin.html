@@ -13,23 +13,38 @@
 <body>
 
 <div class="d-flex flex-column flex-md-row align-items-center pb-3 border-bottom" style="margin-top: 20px;">
-    <span class="fs-4 titleInfo">Список билетов</span>
+    <span class="fs-4 titleInfo">Список Пользователей</span>
     <nav class="d-inline-flex mt-2 mt-md-0 ms-md-auto">
-        <a class="textLink" href="">Выйти</a>
+        <select id="selectRole" name="selectRole" class="form-select selectForm">
+            <option th:each="role: ${roles}" th:value="${role.name}" th:text="${role.pretty_name}"></option>
+            <option th:text="Ученик"></option>
+        </select>
+    </nav>
+    <nav class="d-inline-flex mt-2 mt-md-0 ms-md-auto">
+        <a class="textLink" th:href="@{/logout}">Выйти</a>
         <a class="textLink" th:href="@{/admin/add}">Добавить Пользователя</a>
     </nav>
 </div>
 
-<div th:each="teacher: ${teachers}" class="ticket p-3 rounded">
-        <span>
-            <button th:id="${teacher.id}" class="btn btn-danger btn-sm btnDelete">Удалить</button>
-            <form method="post" th:action="@{'/admin/edit/' + ${teacher.id}}">
-                <button style="margin-right: 10px" class="btn btn-danger btn-sm btnDelete">Редактировать</button>
-            </form>
-            <h3 th:text="${teacher.firstName} + ' ' + ${teacher.lastName}"></h3><br>
-            <img class="avatar" th:src="@{/images/avatar.png}">
-            <form style="margin-top: 10px;" method="post" th:action="@{'/admin/add/class/' + ${teacher.id}}">
-                <select class="form-select" id="selectSubject" name="selectSubject">
+<div style="display: none;" id="listAdmins">
+    <div th:each="admin: ${admins}" th:id="${admin.id}" class="ticket p-3 rounded cont">
+            <span>
+                <button class="btn btn-danger btn-sm btnDelete">Удалить</button>
+                <button style="margin-right: 10px; float:right;" class="btnEdit btn btn-danger btn-sm">Редактировать</button>
+                <h3 th:text="${admin.firstName} + ' ' + ${admin.lastName}"></h3><br>
+                <img class="avatar" th:src="@{/images/avatar.png}">
+            </span>
+    </div>
+</div>
+
+<div style="display: none;" id="listTeachers">
+    <div th:each="teacher: ${teachers}" th:id="${teacher.id}" class="ticket p-3 rounded cont">
+            <span>
+                <button class="btn btn-danger btn-sm btnDelete">Удалить</button>
+                <button style="margin-right: 10px; float:right;" class="btnEdit btn btn-danger btn-sm">Редактировать</button>
+                <h3 th:text="${teacher.firstName} + ' ' + ${teacher.lastName}"></h3><br>
+                <img class="avatar" th:src="@{/images/avatar.png}">
+                <select style="margin-top: 10px" class="form-select" id="selectSubject" name="selectSubject">
                     <option>Математика</option>
                     <option>Русский язык</option>
                     <option>Английский язык</option>
@@ -39,41 +54,69 @@
                 </select>
                 <label for="classP">Введите класс</label>
                 <input type="text" class="form-control" id="classP" name="classP" placeholder="Введите класс...">
-                <button style="margin-top: 10px;" type="submit" class="elementsForm btn btn-primary btn-sm">Добавить</button>
-            </form>
-        </span>
-    <div class="accordion-contianer">
-        <button class="accordion">Дополнительная информация</button>
-        <div class="panel">
-            <table class="table table-primary mt-5">
-                <thead class="table-dark">
-                <tr>
-                    <th class="names" scope="col">Удаление предмета</th>
-                    <th class="names" scope="col">Предмет</th>
-                    <th class="names" scope="col">Класс</th>
-                    <th class="names" scope="col">Удалить класс</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="t : ${teacher.teacher.classP}" >
-                    <td>
-                        <button th:id="${teacher.id} + '/' + ${t.key}" class="btnDeleteSubject btn btn-danger btn-sm">Удалить</button>
-                    </td>
-                    <td th:text="${t.key}"></td>
-                    <td class="subjects" th:text="${t.value}"></td>
-                    <td>
-                        <span>
-                            <button th:id="${teacher.id} + '/' + ${t.key}" class="btnDeleteClass btn btn-danger btn-sm">Удалить</button>
-                            <select class="form-select selectForm" id="selectedClass" name="selectedClass">
-                                <option th:each="subject: ${t.value}" th:text="${subject}"></option>
-                            </select>
-                        </span>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+                <button style="margin-top: 10px;" class="buttonAddClass elementsForm btn btn-primary btn-sm">Добавить</button>
+            </span>
+        <div class="accordion-contianer">
+            <button class="accordion">Дополнительная информация</button>
+            <div class="panel">
+                <table class="table table-primary mt-5">
+                    <thead class="table-dark">
+                    <tr>
+                        <th class="names" scope="col">Удаление предмета</th>
+                        <th class="names" scope="col">Предмет</th>
+                        <th class="names" scope="col">Класс</th>
+                        <th class="names" scope="col">Удалить класс</th>
+                    </tr>
+                    </thead>
+                    <tbody class="teachers">
+                    <tr th:each="t : ${teacher.teacher.classP}" >
+                        <td>
+                            <button class="btnDeleteSubject btn btn-danger btn-sm">Удалить</button>
+                        </td>
+                        <td class="subject" th:text="${t.key}"></td>
+                        <td th:text="${t.value}"></td>
+                        <td>
+                            <span>
+                                <button class="btnDeleteClass btn btn-danger btn-sm">Удалить</button>
+                                <select class="selectedClass form-select selectForm">
+                                    <option th:each="subject: ${t.value}" th:text="${subject}"></option>
+                                </select>
+                            </span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
+</div>
+
+<div style="display: none;" id="listPupils">
+    <table class="table table-primary mt-5">
+        <thead class="table-dark">
+        <tr>
+            <th style="width: 16%;" class="names" scope="col">Имя</th>
+            <th style="width: 16%;" class="names" scope="col">Фамилия</th>
+            <th style="width: 46%;" scope="col">Класс</th>
+            <th style="width: 22%;" scope="col">
+                Действия с учениками
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="pupilCont" th:each="pupil : ${pupils}" th:id="${pupil.id}">
+            <td th:text="${pupil.firstName}" class="names"></td>
+            <td th:text="${pupil.lastName}" class="names"></td>
+            <td th:text="${pupil.getClassP()}"></td>
+            <td>
+                <span>
+                    <button class="btnDeletePupil btn btn-danger btn-sm">Удалить</button>
+                    <button class="btnEditPupil btn btn-primary btn-sm">Редактировать</button>
+                </span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 </div>
 
 </body>

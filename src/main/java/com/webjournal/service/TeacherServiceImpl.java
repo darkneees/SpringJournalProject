@@ -23,24 +23,25 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public void changeTeacherClass(User user, String selectSubject, String classP) {
+    public Teacher changeTeacherClass(User user, String selectSubject, String classP) {
         Teacher teacher = user.getTeacher();
         ArrayList<String> list = new ArrayList<>();
         list.add(selectSubject);
         teacher.addClassP(classP, list);
 
         teacherRepository.save(teacher);
+        return teacher;
     }
 
     @Override
-    public void deleteWhereClass(User user, String classP) {
+    public void deleteWhereSubject(User user, String subject) {
         Teacher teacher = user.getTeacher();
-        teacher.deleteClassP(classP);
+        teacher.deleteClassP(subject);
         teacherRepository.save(teacher);
     }
 
     @Override
-    public Teacher deleteSubjectInClass(User user, String classP, String subject){
+    public Teacher deleteClassInSubject(User user, String classP, String subject){
         Teacher teacher = user.getTeacher();
         teacher.deleteSubjectInClass(subject, classP);
 

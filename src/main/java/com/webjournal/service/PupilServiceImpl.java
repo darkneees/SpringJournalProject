@@ -30,4 +30,30 @@ public class PupilServiceImpl implements PupilService {
 
         pupilRepository.save(pupil);
     }
+
+    @Override
+    public List<Pupil> getAllPupils() {
+        return pupilRepository.findAll();
+    }
+
+    @Override
+    public void deletePupilById(Long id) {
+        pupilRepository.deleteById(id);
+    }
+
+    @Override
+    public Pupil findPupilById(Long id) {
+        return pupilRepository.findById(id).get();
+    }
+
+    @Override
+    public void editPupilById(Long id, String firstName, String lastName, String classP) {
+        Pupil pupil = pupilRepository.findById(id).get();
+        pupil.setFirstName(firstName);
+        pupil.setLastName(lastName);
+        pupil.setClassP(classP);
+
+        pupilRepository.save(pupil);
+
+    }
 }

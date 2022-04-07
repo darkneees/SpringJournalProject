@@ -39,8 +39,6 @@ public class TeacherController {
                                           @RequestParam("selectedClass") String selectedClass,
                                           @RequestParam("selectedSubject") String selectedSubject) {
 
-        System.out.println("post");
-
         model.addAttribute("pupils", pupilService.findPupilsByClassP(selectedClass));
         model.addAttribute("subject", selectedSubject);
         model.addAttribute("user", getUser());
