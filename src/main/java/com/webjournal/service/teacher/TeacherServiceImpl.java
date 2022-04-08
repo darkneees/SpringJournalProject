@@ -1,4 +1,4 @@
-package com.webjournal.service;
+package com.webjournal.service.teacher;
 
 import com.webjournal.entity.Teacher;
 import com.webjournal.entity.User;
@@ -49,6 +49,12 @@ public class TeacherServiceImpl implements TeacherService {
         return teacher;
     }
 
+    @Override
+    public List<String> getClassesBySelectedSubject(Long id, String selectedSubject) {
+        Teacher teacher = teacherRepository.findById(id).get();
+
+        return teacher.getClassP().get(selectedSubject);
+    }
 
 
 }

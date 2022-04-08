@@ -8,7 +8,7 @@
     <script type="text/javascript" th:src="@{/js/jquery-3.6.0.min.js}"></script>
     <script type="text/javascript" th:src="@{/js/teacher.js}"></script>
 </head>
-<body onload="changeColor(); initializePage()">
+<body>
 
 <div class="myContainer">
 
@@ -18,75 +18,19 @@
     </div>
 
 
-    <div style="margin-top: 30px;">
-        <form id="checkMark" method="post" th:action="@{/teacher}">
-            <h5 style="display: inline;" class="label label-default">Выберите предмет:</h5>
-            <select onchange="selectClassFunc()" id="selectedSubject" name="selectedSubject" class="form-select selectForm">
-                <option th:each="subject: ${user.teacher.classP.keySet()}" th:text="${subject}" th:value="${subject}"></option>
-            </select>
-            <h5 style="display: inline;" class="label label-default">Выберите класс:</h5>
-            <select id="selectedClass" name="selectedClass" class="form-select selectForm">
-            </select>
-            <button class="btn btn-info btn-md" style="vertical-align: baseline;">Отобразить оценки</button>
-        </form>
+    <div class="teacherSelectDiv" th:id="${user.teacher.id}" style="margin-top: 30px;">
+        <h5 style="display: inline;" class="label label-default">Выберите предмет:</h5>
+        <select id="selectedSubject" name="selectedSubject" class="form-select selectForm">
+            <option th:each="subject: ${user.teacher.classP.keySet()}" th:text="${subject}" th:value="${subject}"></option>
+        </select>
+        <h5 style="display: inline;" class="label label-default">Выберите класс:</h5>
+        <select id="selectedClass" name="selectedClass" class="form-select selectForm"></select>
+        <button class="btn-post btn btn-info btn-md" style="vertical-align: baseline;">Отобразить оценки</button>
     </div>
 
-    <table class="table table-primary mt-5">
-      <thead class="table-dark">
-        <tr>
-            <th style="width: 16%;" class="names" scope="col">Имя</th>
-            <th style="width: 16%;" class="names" scope="col">Фамилия</th>
-            <th style="width: 46%;" scope="col">Оценки</th>
-            <th style="width: 22%;" scope="col">Выставить оценку</th>
-        </tr>
-      </thead>
-        <tbody>
-            <tr th:each="pupil : ${pupils}">
-                <td th:text="${pupil.firstName}" class="names"></td>
-                <td th:text="${pupil.lastName}" class="names"></td>
-                <td><span th:id="'mark_' + ${pupil.id}" th:if="${pupil.getData() != null}" th:text="${pupil.getData().get(subject)}" class="border borderMark"></span>
-                </td>
-                <td>
-                    <span class="labelAndSelect">
-                    <label for="date">Дата:</label>
-                    <input class="md-form md-outline input-with-post-icon datepicker"
-                           type="date" id="date" name="date" min="2022-01-01" max="2023-12-31"/>
-                    <label for="mark">Оценка</label>
-                    <input type="text" style="width: 40px" id="mark" name="mark">
-                        <a th:id="${pupil.id}" style="vertical-align: baseline;" class="btn btn-dark btn-sm btn-post">+</a>
-                    </span>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-
+    <div class="pupilContent ticket p-3 rounded"></div>
 
 </div>
 
-<script th:inline="javascript">
-
-    function selectClassFunc(){
-
-        let subject = document.getElementById("selectedSubject").value;
-        let classSelect = document.getElementById("selectedClass");
-        while (classSelect.options.length > 0) {
-            classSelect.remove(0);
-        }
-        var classP = [[${user.teacher.classP}]];
-
-        for(let i = 0; i < classP[subject].length; i++) {
-            var opt = document.createElement('option');
-            opt.value = classP[subject][i];
-            opt.innerHTML = classP[subject][i];
-            classSelect.appendChild(opt);
-        }
-    }
-
-    function initializePage(){
-        selectClassFunc();
-    }
-
-
-</script>
 </body>
 </html>

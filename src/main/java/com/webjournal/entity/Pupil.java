@@ -87,6 +87,15 @@ public class Pupil {
         }
     }
 
+    public void deleteMark(String subject, String date){
+        if(data.containsKey(subject)){
+            List<Map<String, String>> temp = data.get(subject);
+            for(Map<String, String> elem: temp){
+                elem.remove(date);
+            }
+        }
+    }
+
     public Long getId() {
         return id;
     }

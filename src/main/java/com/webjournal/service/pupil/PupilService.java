@@ -1,4 +1,4 @@
-package com.webjournal.service;
+package com.webjournal.service.pupil;
 
 import com.webjournal.entity.Pupil;
 
@@ -17,4 +17,6 @@ public interface PupilService {
     Pupil findPupilById(Long id);
 
     void editPupilById(Long id, String firstName, String lastName, String classP);
+
+    void deleteMarkByDate(Long id, String selectedSubject, String date);
 }

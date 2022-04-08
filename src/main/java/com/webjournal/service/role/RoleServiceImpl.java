@@ -1,4 +1,4 @@
-package com.webjournal.service;
+package com.webjournal.service.role;
 
 import com.webjournal.entity.Role;
 import com.webjournal.repository.RoleRepository;

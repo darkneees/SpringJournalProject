@@ -1,18 +1,19 @@
 package com.webjournal.controller;
 
+import com.google.gson.Gson;
+import com.webjournal.entity.Pupil;
 import com.webjournal.entity.User;
-import com.webjournal.service.PupilServiceImpl;
-import com.webjournal.service.TeacherServiceImpl;
-import com.webjournal.service.UserServiceImpl;
+import com.webjournal.service.pupil.PupilServiceImpl;
+import com.webjournal.service.teacher.TeacherServiceImpl;
+import com.webjournal.service.user.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.view.RedirectView;
+
+import java.util.List;
 
 @Controller
 public class TeacherController {
@@ -28,31 +29,59 @@ public class TeacherController {
 
     @GetMapping("/teacher")
     public String getTeacherPage(Model model){
-
         model.addAttribute("user", getUser());
-
         return "teacher";
     }
+
 
     @PostMapping("/teacher")
-    public String getTeacherPageWithMarks(Model model,
-                                          @RequestParam("selectedClass") String selectedClass,
-                                          @RequestParam("selectedSubject") String selectedSubject) {
-
-        model.addAttribute("pupils", pupilService.findPupilsByClassP(selectedClass));
-        model.addAttribute("subject", selectedSubject);
-        model.addAttribute("user", getUser());
-
-        return "teacher";
-    }
-
-    @PostMapping("/teacher/mark/{id}/{subject}")
     @ResponseBody
-    public void addPupilMark(@PathVariable Long id, @PathVariable String subject,
-                                       @RequestParam("date") String date, @RequestParam("mark") String mark) {
+    public String getPupilsTable(@RequestParam("selectedClass") String selectedClass,
+                                 @RequestParam("selectedSubject") String selectedSubject){
+        List<Pupil> pupils = pupilService.findPupilsByClassP(selectedClass);
+        for(Pupil pupil: pupils) {
+            if(pupil.getData() != null) {
+                for (String key : pupil.getData().keySet()) {
+                    if (!key.equals(selectedSubject)) pupil.getData().remove(key);
+                }
+            }
+        }
 
-        pupilService.addMarkPupil(id, subject, date, mark);
+        System.out.println(new Gson().toJson(pupils));
+
+        return "{\"result\": \"success\", \"data\":" + new Gson().toJson(pupils) + "}";
     }
+
+    @PostMapping("/teacher/classes")
+    @ResponseBody
+    public String getClasses(@RequestParam("id") Long id, @RequestParam("selectedSubject") String selectedSubject){
+        List<String> list = teacherService.getClassesBySelectedSubject(id, selectedSubject);
+        return "{\"result\": \"success\", \"data\": \"" + list + "\"}";
+    }
+
+    @PostMapping("/teacher/pupil/mark")
+    @ResponseBody
+    public String addPupilMark(@RequestParam("id") Long id,
+                               @RequestParam("selectedSubject") String selectedSubject,
+                               @RequestParam("date") String date,
+                               @RequestParam("mark") String mark){
+
+        pupilService.addMarkPupil(id, selectedSubject, date, mark);
+
+        return "{\"result\": \"success\", \"date\": \"" + date + "\", \"mark\": \"" + mark + "\"}";
+    }
+
+    @PostMapping("/teacher/pupils/delete/mark")
+    @ResponseBody
+    public String deleteMark(@RequestParam("id") Long id,
+                             @RequestParam("selectedSubject") String selectedSubject,
+                             @RequestParam("date") String date){
+
+        pupilService.deleteMarkByDate(id, selectedSubject, date);
+
+        return "{\"result\": \"success\"}";
+    }
+
 
     private User getUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

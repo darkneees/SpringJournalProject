@@ -30,7 +30,7 @@
     <div th:each="admin: ${admins}" th:id="${admin.id}" class="ticket p-3 rounded cont">
             <span>
                 <button class="btn btn-danger btn-sm btnDelete">Удалить</button>
-                <button style="margin-right: 10px; float:right;" class="btnEdit btn btn-danger btn-sm">Редактировать</button>
+                <button style="margin-right: 10px; float:right;" class="btnEdit btn btn-success btn-sm">Редактировать</button>
                 <h3 th:text="${admin.firstName} + ' ' + ${admin.lastName}"></h3><br>
                 <img class="avatar" th:src="@{/images/avatar.png}">
             </span>

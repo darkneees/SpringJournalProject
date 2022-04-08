@@ -1,4 +1,4 @@
-package com.webjournal.service;
+package com.webjournal.service.pupil;
 
 import com.webjournal.entity.Pupil;
 import com.webjournal.repository.PupilRepository;
@@ -53,6 +53,14 @@ public class PupilServiceImpl implements PupilService {
         pupil.setLastName(lastName);
         pupil.setClassP(classP);
 
+        pupilRepository.save(pupil);
+
+    }
+
+    @Override
+    public void deleteMarkByDate(Long id, String selectedSubject, String date) {
+        Pupil pupil = pupilRepository.findById(id).get();
+        pupil.deleteMark(selectedSubject, date);
         pupilRepository.save(pupil);
 
     }

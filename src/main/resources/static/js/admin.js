@@ -201,5 +201,4 @@ $(document).on("click", ".buttonAddClass", function (){
       else $(".teachers").append(html);
     }
   });
-
-})
+});
