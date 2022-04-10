@@ -34,24 +34,9 @@ $(document).ready(function() {
 
 });
 
-$(document).on("click", ".btnEdit", function (){
-
-  let id = $(this).parents(".cont").attr('id');
-  let url = '/admin/edit/' + id;
-
-  $.ajax({
-    url: url,
-    method: 'get',
-    success: function (){
-      window.location = url;
-    }
-  });
-});
-
 $(document).on("click", ".btnEditPupil", function (){
 
-  let id = $(this).parents(".pupilCont").attr('id');
-  let url = '/admin/editPupil/' + id;
+  let url = $(this).data("value");
 
   $.ajax({
     url: url,
@@ -64,13 +49,12 @@ $(document).on("click", ".btnEditPupil", function (){
 
 $(document).on("click", ".btnDeletePupil", function (){
 
-  let id = $(this).parents(".pupilCont").attr('id');
   let root = $(this).parents(".pupilCont");
-  let url = "/admin/deletePupil/" + id;
+  let url = $(this).data("value");
 
   $.ajax({
     url: url,
-    method: 'post',
+    method: 'delete',
     dataType: 'json',
     success: function () {
       root.remove();
@@ -81,9 +65,8 @@ $(document).on("click", ".btnDeletePupil", function (){
 
 $(document).on("click", ".btnDelete", function (){
 
-  let id = $(this).parents(".cont").attr('id');
   let root = $(this).parents(".cont");
-  let url = "/admin/delete/" + id;
+  let url = $(this).data("value");
 
   $.ajax({
     url: url,
@@ -96,13 +79,12 @@ $(document).on("click", ".btnDelete", function (){
 });
 
 $(document).on("click", ".btnDeleteSubject", function (){
-  let id = $(this).parents(".cont").attr('id');
-  let str = '/admin/delete/subject/' + id;
+  let url = $(this).data("value");
   let subject = $(this).closest("td").next("td").text();
   let elem = $(this).parent().parent();
 
   $.ajax({
-    url: str,
+    url: url,
     method: 'post',
     data: {
       "subject": subject
@@ -115,10 +97,9 @@ $(document).on("click", ".btnDeleteSubject", function (){
 
 $(document).on("click", ".btnDeleteClass", function (){
 
-  let id = $(this).parents(".cont").attr('id');
   let selectedSubject = $(this).parent().parent().prev().prev().text()
   let selectedClass = $(this).parent().find(":selected").val();
-  let url = '/admin/delete/class/' + id;
+  let url = $(this).data("value");
 
   let button = $(this);
 
@@ -134,7 +115,7 @@ $(document).on("click", ".btnDeleteClass", function (){
       if(data.data === "null")
         button.parent().parent().parent().remove();
       else {
-        button.parent().parent().prev().text(data.data)
+        button.parent().parent().prev().text('[' + data.data.join(", ") + ']');
         let options = button.next().children();
         for(let i = 0; i < options.length; i++){
           if(options[i].text === selectedClass) options[i].remove();
@@ -146,12 +127,10 @@ $(document).on("click", ".btnDeleteClass", function (){
 
 $(document).on("click", ".buttonAddClass", function (){
 
-  let id = $(this).parents(".cont").attr('id');
   let selectSubject = $(this).parent().find("#selectSubject").val();
   let classP = $(this).parent().find("#classP").val();
-  let url = '/admin/add/class/' + id;
+  let url = $(this).data("value");
 
-  console.log(selectSubject)
 
   $.ajax({
     url: url,
@@ -161,15 +140,11 @@ $(document).on("click", ".buttonAddClass", function (){
       'classP': classP
     },
     dataType: 'json',
-    success: function (data){
-      let str = data.data.replace("[", "");
-      str = str.replace("]", "");
-      str = str.replaceAll(",", "");
-      str = str.split(" ");
-      let options = "";
+    success: function (result){
 
-      for(let i = 0; i < str.length; i++)
-        options += "<option>"+ str[i] + "</option>";
+      let options = "";
+      for(let i = 0; i < result.data.length; i++)
+        options += "<option>"+ result.data[i] + "</option>";
 
       let element = null;
 
@@ -183,17 +158,17 @@ $(document).on("click", ".buttonAddClass", function (){
       let html = `
   <tr>
     <td>
-      <button class="btnDeleteSubject btn btn-danger btn-sm">Удалить</button>
+      <button data-value="` + url.replace("add", "delete").replace("class", "subject") + `" class="btnDeleteSubject btn btn-danger btn-sm">Удалить</button>
     </td>
     <td class="subject">` + selectSubject + `</td>
-    <td>` + data.data + `</td>
+    <td>[` + result.data.join(", ") + `]</td>
     <td>
-                        <span>
-                            <button class="btnDeleteClass btn btn-danger btn-sm">Удалить</button>
-                            <select class="form-select selectForm" id="selectedClass" name="selectedClass">
-                                ` + options + `
-                            </select>
-                        </span>
+      <span>
+          <button data-value="` + url.replace("add", "delete") + `" class="btnDeleteClass btn btn-danger btn-sm">Удалить</button>
+          <select class="form-select selectForm" id="selectedClass" name="selectedClass">
+              ` + options + `
+          </select>
+      </span>
     </td>
   </tr`
 

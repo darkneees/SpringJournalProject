@@ -1,12 +1,10 @@
 package com.webjournal.controller;
 
-import com.google.gson.Gson;
 import com.webjournal.entity.Pupil;
 import com.webjournal.entity.User;
 import com.webjournal.service.pupil.PupilServiceImpl;
 import com.webjournal.service.teacher.TeacherServiceImpl;
 import com.webjournal.service.user.UserServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -14,18 +12,23 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @Controller
 public class TeacherController {
 
-    @Autowired
-    TeacherServiceImpl teacherService;
+    final TeacherServiceImpl teacherService;
 
-    @Autowired
-    UserServiceImpl userService;
+    final UserServiceImpl userService;
 
-    @Autowired
-    PupilServiceImpl pupilService;
+    final PupilServiceImpl pupilService;
+
+    public TeacherController(TeacherServiceImpl teacherService, UserServiceImpl userService, PupilServiceImpl pupilService) {
+        this.teacherService = teacherService;
+        this.userService = userService;
+        this.pupilService = pupilService;
+    }
 
     @GetMapping("/teacher")
     public String getTeacherPage(Model model){
@@ -36,50 +39,44 @@ public class TeacherController {
 
     @PostMapping("/teacher")
     @ResponseBody
-    public String getPupilsTable(@RequestParam("selectedClass") String selectedClass,
-                                 @RequestParam("selectedSubject") String selectedSubject){
+    public Map<String, Object> getPupilsTable(@RequestParam("selectedClass") String selectedClass,
+                                              @RequestParam("selectedSubject") String selectedSubject){
         List<Pupil> pupils = pupilService.findPupilsByClassP(selectedClass);
         for(Pupil pupil: pupils) {
-            if(pupil.getData() != null) {
-                for (String key : pupil.getData().keySet()) {
-                    if (!key.equals(selectedSubject)) pupil.getData().remove(key);
-                }
-            }
+            if(pupil.getData() != null) pupil.getData().keySet().removeIf(key -> !Objects.equals(key, selectedSubject));
         }
-
-        System.out.println(new Gson().toJson(pupils));
-
-        return "{\"result\": \"success\", \"data\":" + new Gson().toJson(pupils) + "}";
+        return Map.of("result", "success", "data", pupils);
     }
 
     @PostMapping("/teacher/classes")
     @ResponseBody
-    public String getClasses(@RequestParam("id") Long id, @RequestParam("selectedSubject") String selectedSubject){
+    public Map<String, Object> getClasses(@RequestParam("id") Long id, @RequestParam("selectedSubject") String selectedSubject){
         List<String> list = teacherService.getClassesBySelectedSubject(id, selectedSubject);
-        return "{\"result\": \"success\", \"data\": \"" + list + "\"}";
+        return Map.of("result", "success", "data", list);
     }
 
     @PostMapping("/teacher/pupil/mark")
     @ResponseBody
-    public String addPupilMark(@RequestParam("id") Long id,
-                               @RequestParam("selectedSubject") String selectedSubject,
-                               @RequestParam("date") String date,
-                               @RequestParam("mark") String mark){
+    public Map<String, String> addPupilMark(@RequestParam("id") Long id,
+                                            @RequestParam("selectedSubject") String selectedSubject,
+                                            @RequestParam("date") String date,
+                                            @RequestParam("mark") String mark){
 
         pupilService.addMarkPupil(id, selectedSubject, date, mark);
 
-        return "{\"result\": \"success\", \"date\": \"" + date + "\", \"mark\": \"" + mark + "\"}";
+        return Map.of("result", "success", "date", date, "mark", mark);
+
     }
 
     @PostMapping("/teacher/pupils/delete/mark")
     @ResponseBody
-    public String deleteMark(@RequestParam("id") Long id,
-                             @RequestParam("selectedSubject") String selectedSubject,
-                             @RequestParam("date") String date){
+    public Map<String, String> deleteMark(@RequestParam("id") Long id,
+                                          @RequestParam("selectedSubject") String selectedSubject,
+                                          @RequestParam("date") String date){
 
         pupilService.deleteMarkByDate(id, selectedSubject, date);
 
-        return "{\"result\": \"success\"}";
+        return Map.of("result", "success");
     }
 
 

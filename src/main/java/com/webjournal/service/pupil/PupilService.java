@@ -19,4 +19,5 @@ public interface PupilService {
     void editPupilById(Long id, String firstName, String lastName, String classP);
 
     void deleteMarkByDate(Long id, String selectedSubject, String date);
+
 }

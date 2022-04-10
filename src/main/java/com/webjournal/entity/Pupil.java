@@ -68,12 +68,8 @@ public class Pupil {
     public void addMarkInData(String subject, String date, String mark){
         if(data == null) {
             data = new HashMap<>();
-                List<Map<String, String>> temp = new ArrayList<>();
-                HashMap<String, String> hashMap = new HashMap<>();
-                hashMap.put(date, mark);
-                temp.add(hashMap);
-                data.put(subject, temp);
-            } else {
+            createSubject(subject, date, mark);
+        } else {
                 if(data.containsKey(subject)) {
                     List<Map<String, String>> temp = data.get(subject);
                     for(Map<String, String> elem: temp) {
@@ -83,8 +79,18 @@ public class Pupil {
                             elem.put(date, mark);
                         }
                     }
+                } else {
+                    createSubject(subject, date, mark);
                 }
         }
+    }
+
+    private void createSubject(String subject, String date, String mark) {
+        List<Map<String, String>> temp = new ArrayList<>();
+        HashMap<String, String> hashMap = new HashMap<>();
+        hashMap.put(date, mark);
+        temp.add(hashMap);
+        data.put(subject, temp);
     }
 
     public void deleteMark(String subject, String date){

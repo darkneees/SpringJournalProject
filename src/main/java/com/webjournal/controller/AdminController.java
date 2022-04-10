@@ -1,5 +1,6 @@
 package com.webjournal.controller;
 
+import com.google.gson.Gson;
 import com.webjournal.entity.Pupil;
 import com.webjournal.entity.Role;
 import com.webjournal.entity.Teacher;
@@ -8,7 +9,6 @@ import com.webjournal.service.pupil.PupilServiceImpl;
 import com.webjournal.service.role.RoleServiceImpl;
 import com.webjournal.service.teacher.TeacherServiceImpl;
 import com.webjournal.service.user.UserServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -16,25 +16,32 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class AdminController {
 
-    @Autowired
-    UserServiceImpl userService;
+    final UserServiceImpl userService;
 
-    @Autowired
-    TeacherServiceImpl teacherService;
+    final TeacherServiceImpl teacherService;
 
-    @Autowired
-    PupilServiceImpl pupilService;
+    final PupilServiceImpl pupilService;
 
-    @Autowired
-    RoleServiceImpl roleService;
+    final RoleServiceImpl roleService;
 
-    /////////////////////////// Страницы со списками пользователей /////////////////////////
+    final Gson json;
+
+    public AdminController(UserServiceImpl userService, TeacherServiceImpl teacherService, PupilServiceImpl pupilService, RoleServiceImpl roleService, Gson json) {
+        this.userService = userService;
+        this.teacherService = teacherService;
+        this.pupilService = pupilService;
+        this.roleService = roleService;
+        this.json = json;
+    }
+
 
     @GetMapping("/admin")
     public String getPupilsPage(Model model) {
@@ -49,14 +56,12 @@ public class AdminController {
         return "admin";
     }
 
-    // Страница с добавлением пользователя
     @GetMapping("/admin/add")
     public String getFormAddAdmin(Model model){
         model.addAttribute("roles", roleService.getRoles());
         return "formAdd";
     }
 
-    // Добавление пользователя через форму выше
     @PostMapping("/admin/add")
     public RedirectView addAdminInDb(@RequestParam("username") String username,
                                      @RequestParam("password") String password,
@@ -109,13 +114,13 @@ public class AdminController {
         return new RedirectView("/admin");
     }
 
-    @GetMapping("/admin/editPupil/{id}")
+    @GetMapping("/admin/pupils/edit/{id}")
     public String getEditPupilPage(@PathVariable Long id, Model model){
         model.addAttribute("pupil", pupilService.findPupilById(id));
         return "formEditPupil";
     }
 
-    @PostMapping("/admin/editPupil")
+    @PostMapping("/admin/pupils/edit")
     public RedirectView requestEditPupil(@RequestParam("id") Long id,
                                          @RequestParam("firstName") String firstName,
                                          @RequestParam("lastName") String lastName,
@@ -127,48 +132,49 @@ public class AdminController {
     }
 
 
-    @PostMapping("/admin/deletePupil/{id}")
+    @DeleteMapping("/admin/pupils/delete/{id}")
     @ResponseBody
-    public String deletePupil(@PathVariable Long id) {
+    public Map<String, String> deletePupil(@PathVariable Long id) {
         pupilService.deletePupilById(id);
-        return "{\"result\": \"success\"}";
+        return Map.of("result", "success");
     }
 
 
     @PostMapping("/admin/delete/{id}")
     @ResponseBody
-    public String deleteUser(@PathVariable Long id) {
+    public Map<String, String> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
-        return "{\"result\": \"success\"}";
+        return Map.of("result", "success");
     }
 
     @PostMapping("/admin/add/class/{id}")
     @ResponseBody
-    public String addTeachClass(@PathVariable Long id, @RequestParam String selectSubject,
-                                      @RequestParam String classP){
+    public Map<Object, Object> addTeachClass(@PathVariable Long id, @RequestParam String selectSubject,
+                                             @RequestParam String classP){
 
         Teacher teacher = teacherService.changeTeacherClass(userService.getUserById(id), classP, selectSubject);
-
-        return "{\"result\": \"success\", \"data\": \"" + teacher.getClassP().get(selectSubject) + "\"}";
+        return Map.of("result", "success", "data", teacher.getClassP().get(selectSubject));
     }
 
     @PostMapping("/admin/delete/subject/{id}")
     @ResponseBody
-    public String deleteTeachSubject(@PathVariable Long id, @RequestParam String subject) {
+    public Map<String, String> deleteTeachSubject(@PathVariable Long id, @RequestParam String subject) {
         teacherService.deleteWhereSubject(userService.getUserById(id), subject);
 
-        return "{\"result\": \"success\"}";
+        return Map.of("result", "success");
     }
 
     @PostMapping("/admin/delete/class/{id}")
     @ResponseBody
-    public String deleteTeachClass(@PathVariable Long id,
-                                     @RequestParam("selectedSubject") String selectedSubject,
-                                     @RequestParam("selectedClass") String selectedClass) {
+    public Map<String, Serializable> deleteTeachClass(@PathVariable Long id,
+                                                      @RequestParam("selectedSubject") String selectedSubject,
+                                                      @RequestParam("selectedClass") String selectedClass) {
 
         Teacher teacher = teacherService.deleteClassInSubject(userService.getUserById(id), selectedClass, selectedSubject);
 
-        return "{\"result\": \"success\", \"data\": \"" + teacher.getClassP().get(selectedSubject) + "\"}";
+        return Map.of(
+                "result", "success",
+                "data", teacher.getClassP().get(selectedSubject) != null ? teacher.getClassP().get(selectedSubject) : "");
 
     }
 

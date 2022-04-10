@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
-    <title>Авторизация</title>
+    <title>Панель администратора</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
     <link rel="stylesheet" th:href="@{/css/admin.css}"/>
     <link rel="stylesheet" th:href="@{/css/index.css}"/>
@@ -12,7 +12,7 @@
 </head>
 <body>
 
-<div class="d-flex flex-column flex-md-row align-items-center pb-3 border-bottom" style="margin-top: 20px;">
+<div class="d-flex flex-column flex-md-row align-items-center pb-3 border-bottom mt-3">
     <span class="fs-4 titleInfo">Список Пользователей</span>
     <nav class="d-inline-flex mt-2 mt-md-0 ms-md-auto">
         <select id="selectRole" name="selectRole" class="form-select selectForm">
@@ -27,24 +27,25 @@
 </div>
 
 <div style="display: none;" id="listAdmins">
-    <div th:each="admin: ${admins}" th:id="${admin.id}" class="ticket p-3 rounded cont">
+    <div th:each="admin: ${admins}" class="ticket p-3 rounded cont">
             <span>
-                <button class="btn btn-danger btn-sm btnDelete">Удалить</button>
-                <button style="margin-right: 10px; float:right;" class="btnEdit btn btn-success btn-sm">Редактировать</button>
+                <button class="mt-2 float-end btn btn-danger btn-sm btnDelete" th:attr="data-value='/admin/delete/' + ${admin.id}">Удалить</button>
+                <a class="mt-2 me-2 float-end btn btn-success btn-sm" th:href="@{'/admin/edit/' + ${admin.id}}">Редактировать</a>
                 <h3 th:text="${admin.firstName} + ' ' + ${admin.lastName}"></h3><br>
                 <img class="avatar" th:src="@{/images/avatar.png}">
             </span>
     </div>
+    </div>
 </div>
 
 <div style="display: none;" id="listTeachers">
-    <div th:each="teacher: ${teachers}" th:id="${teacher.id}" class="ticket p-3 rounded cont">
+    <div th:each="teacher: ${teachers}" class="ticket p-3 rounded cont">
             <span>
-                <button class="btn btn-danger btn-sm btnDelete">Удалить</button>
-                <button style="margin-right: 10px; float:right;" class="btnEdit btn btn-danger btn-sm">Редактировать</button>
+                <button class="mt-2 float-end btn btn-danger btn-sm btnDelete" th:attr="data-value='/admin/delete/' + ${teacher.id}">Удалить</button>
+                <a class="mt-2 me-2 float-end btn btn-success btn-sm" th:href="@{'/admin/edit/' + ${teacher.id}}">Редактировать</a>
                 <h3 th:text="${teacher.firstName} + ' ' + ${teacher.lastName}"></h3><br>
                 <img class="avatar" th:src="@{/images/avatar.png}">
-                <select style="margin-top: 10px" class="form-select" id="selectSubject" name="selectSubject">
+                <select class="form-select mt-3" id="selectSubject" name="selectSubject">
                     <option>Математика</option>
                     <option>Русский язык</option>
                     <option>Английский язык</option>
@@ -54,7 +55,7 @@
                 </select>
                 <label for="classP">Введите класс</label>
                 <input type="text" class="form-control" id="classP" name="classP" placeholder="Введите класс...">
-                <button style="margin-top: 10px;" class="buttonAddClass elementsForm btn btn-primary btn-sm">Добавить</button>
+                <button th:attr="data-value='/admin/add/class/' + ${teacher.id}" class="buttonAddClass elementsForm btn btn-primary btn-sm mt-3">Добавить</button>
             </span>
         <div class="accordion-contianer">
             <button class="accordion">Дополнительная информация</button>
@@ -71,13 +72,13 @@
                     <tbody class="teachers">
                     <tr th:each="t : ${teacher.teacher.classP}" >
                         <td>
-                            <button class="btnDeleteSubject btn btn-danger btn-sm">Удалить</button>
+                            <button th:attr="data-value='/admin/delete/subject/' + ${teacher.id}" class="btnDeleteSubject btn btn-danger btn-sm">Удалить</button>
                         </td>
                         <td class="subject" th:text="${t.key}"></td>
                         <td th:text="${t.value}"></td>
                         <td>
                             <span>
-                                <button class="btnDeleteClass btn btn-danger btn-sm">Удалить</button>
+                                <button th:attr="data-value='/admin/delete/class/' + ${teacher.id}" class="btnDeleteClass btn btn-danger btn-sm">Удалить</button>
                                 <select class="selectedClass form-select selectForm">
                                     <option th:each="subject: ${t.value}" th:text="${subject}"></option>
                                 </select>
@@ -104,14 +105,14 @@
         </tr>
         </thead>
         <tbody>
-        <tr class="pupilCont" th:each="pupil : ${pupils}" th:id="${pupil.id}">
+        <tr class="pupilCont" th:each="pupil : ${pupils}">
             <td th:text="${pupil.firstName}" class="names"></td>
             <td th:text="${pupil.lastName}" class="names"></td>
             <td th:text="${pupil.getClassP()}"></td>
             <td>
                 <span>
-                    <button class="btnDeletePupil btn btn-danger btn-sm">Удалить</button>
-                    <button class="btnEditPupil btn btn-primary btn-sm">Редактировать</button>
+                    <button th:attr="data-value='/admin/pupils/delete/' + ${pupil.id}" class="btnDeletePupil btn btn-danger btn-sm">Удалить</button>
+                    <button th:attr="data-value='/admin/pupils/edit/' + ${pupil.id}" class="btnEditPupil btn btn-primary btn-sm">Редактировать</button>
                 </span>
             </td>
         </tr>

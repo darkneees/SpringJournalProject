@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>Изменение пользователя</title>
 
   <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
   <link rel="stylesheet" th:href="@{/css/formAdd.css}"/>
@@ -12,47 +12,55 @@
 </head>
 <body>
 
-<form method="post" th:action="@{/admin/edit}" class="border formElement rounded border-primary">
-
-  <div id="mainElement" class="divElement">
-    <h2>Изменить данные пользователя</h2>
-
-    <div class="form-group elementsForm">
-      <label for="id">Id</label>
-      <input id="id" name="id" th:readonly="true" th:value="${user.id}" class="form-control"/>
+  <div class="d-flex flex-column flex-md-row align-items-center pb-3 border-bottom mt-3">
+    <div class="container mt-2">
+      <a th:href="@{/admin}" class="btn btn-primary btn-lg">Вернуться на главную страницу</a>
     </div>
-
-      <div class="form-group elementsForm">
-        <label for="role">Роль</label>
-        <input th:disabled="true" id="role" name="role" readonly th:value="${role}" class="form-control"/>
-      </div>
-
-      <div id="username_div" class="form-group elementsForm">
-        <label for="username">Имя пользователя</label>
-        <input th:field="${user.username}" required type="text" class="form-control" id="username" name="username"  placeholder="Введите имя пользователя...">
-      </div>
-
-    <div id="password_div" class="form-group elementsForm">
-      <label for="password">Пароль(Если не хотите менять, оставьте пустым)</label>
-      <input type="text" class="form-control" id="password" name="password"  placeholder="Введите пароль...">
-    </div>
-
-      <div class="form-group elementsForm">
-        <label for="first_name">Имя</label>
-        <input th:field="${user.firstName}" required type="text" class="form-control" id="first_name" name="first_name" placeholder="Введите имя...">
-      </div>
-
-      <div class="form-group elementsForm">
-        <label for="last_name">Фамилия</label>
-        <input th:field="${user.lastName}" required type="text" class="form-control" id="last_name" name="last_name" placeholder="Введите фамилию...">
-      </div>
-
-    <div>
-      <button style="margin-top: 10px;" type="submit" class="elementsForm btn btn-primary btn-lg">Изменить</button>
-    </div>
-
   </div>
-</form>
+
+
+
+  <form method="post" th:action="@{/admin/edit}" class="border formElement rounded border-primary">
+
+    <div id="mainElement" class="divElement">
+      <h2>Изменить данные пользователя</h2>
+
+      <div class="form-group elementsForm">
+        <label for="id">Id</label>
+        <input id="id" name="id" th:readonly="true" th:value="${user.id}" class="form-control"/>
+      </div>
+
+        <div class="form-group elementsForm">
+          <label for="role">Роль</label>
+          <input th:disabled="true" id="role" name="role" readonly th:value="${role}" class="form-control"/>
+        </div>
+
+        <div id="username_div" class="form-group elementsForm">
+          <label for="username">Имя пользователя</label>
+          <input th:field="${user.username}" required type="text" class="form-control" id="username" name="username"  placeholder="Введите имя пользователя...">
+        </div>
+
+      <div id="password_div" class="form-group elementsForm">
+        <label for="password">Пароль(Если не хотите менять, оставьте пустым)</label>
+        <input type="text" class="form-control" id="password" name="password"  placeholder="Введите пароль...">
+      </div>
+
+        <div class="form-group elementsForm">
+          <label for="first_name">Имя</label>
+          <input th:field="${user.firstName}" required type="text" class="form-control" id="first_name" name="first_name" placeholder="Введите имя...">
+        </div>
+
+        <div class="form-group elementsForm">
+          <label for="last_name">Фамилия</label>
+          <input th:field="${user.lastName}" required type="text" class="form-control" id="last_name" name="last_name" placeholder="Введите фамилию...">
+        </div>
+
+      <div>
+        <button type="submit" class="mt-2 elementsForm btn btn-primary btn-lg">Изменить</button>
+      </div>
+
+    </div>
+  </form>
 
 </body>
 </html>
