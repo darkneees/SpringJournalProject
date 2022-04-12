@@ -22,7 +22,7 @@ $(document).ready(function() {
             password.prop('required', false)
 
             classP_div.css("display", "block");
-            classP_div.prop('required', true)
+            classP.prop('required', true)
 
         } else {
             username_div.css("display", "block");

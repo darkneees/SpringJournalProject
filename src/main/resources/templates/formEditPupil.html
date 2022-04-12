@@ -41,7 +41,7 @@
 
       <div id="classP_div" class="form-group elementsForm">
         <label for="classP">Введите класс</label>
-        <input th:field="${pupil.classP}" required type="text" class="form-control" id="classP" name="classP" placeholder="Введите класс...">
+        <input maxlength="3" pattern="[0-9]{1,}[A-Z]" th:field="${pupil.classP}" required type="text" class="form-control" id="classP" name="classP" placeholder="Введите класс...">
       </div>
       <div>
         <button type="submit" class="mt-2 elementsForm btn btn-primary btn-lg">Изменить</button>

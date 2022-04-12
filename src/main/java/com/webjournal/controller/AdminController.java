@@ -1,10 +1,7 @@
 package com.webjournal.controller;
 
 import com.google.gson.Gson;
-import com.webjournal.entity.Pupil;
-import com.webjournal.entity.Role;
-import com.webjournal.entity.Teacher;
-import com.webjournal.entity.User;
+import com.webjournal.entity.*;
 import com.webjournal.service.pupil.PupilServiceImpl;
 import com.webjournal.service.role.RoleServiceImpl;
 import com.webjournal.service.teacher.TeacherServiceImpl;
@@ -32,33 +29,33 @@ public class AdminController {
 
     final RoleServiceImpl roleService;
 
-    final Gson json;
-
     public AdminController(UserServiceImpl userService, TeacherServiceImpl teacherService, PupilServiceImpl pupilService, RoleServiceImpl roleService, Gson json) {
         this.userService = userService;
         this.teacherService = teacherService;
         this.pupilService = pupilService;
         this.roleService = roleService;
-        this.json = json;
+
     }
 
 
     @GetMapping("/admin")
     public String getPupilsPage(Model model) {
-        List<User> admins = userService.getUsersByRole(Collections.singleton(new Role(1L)));
-        admins.removeIf(user -> user.getUsername().equals(getUser().getUsername()));
         List<User> teachers = userService.getUsersByRole(Collections.singleton(new Role(2L)));
 
         model.addAttribute("pupils", pupilService.getAllPupils());
-        model.addAttribute("admins", admins);
         model.addAttribute("teachers", teachers);
-        model.addAttribute("roles", roleService.getRoles());
+        List<Role> role = roleService.getRoles();
+        role.removeIf(r -> r.getId() == 1);
+        model.addAttribute("roles", role);
+        model.addAttribute("subjects", Subjects.values());
         return "admin";
     }
 
     @GetMapping("/admin/add")
     public String getFormAddAdmin(Model model){
-        model.addAttribute("roles", roleService.getRoles());
+        List<Role> role = roleService.getRoles();
+        role.removeIf(r -> r.getId() == 1);
+        model.addAttribute("roles", role);
         return "formAdd";
     }
 
@@ -79,13 +76,8 @@ public class AdminController {
 
         } else {
             User user = new User();
-            if (role.equals("ROLE_ADMIN"))
-                user.setRoles(Collections.singleton(new Role(1L, "ROLE_ADMIN", "Администратор")));
-
-            else if (role.equals("ROLE_TEACHER")) {
-                user.setRoles(Collections.singleton(new Role(2L, "ROLE_TEACHER", "Преподаватель")));
-                user.setTeacher(new Teacher());
-            }
+            user.setRoles(Collections.singleton(new Role(2L, "ROLE_TEACHER", "Преподаватель")));
+            user.setTeacher(new Teacher());
             user.setUsername(username);
             user.setPassword(password);
             user.setFirstName(firstName);
@@ -93,7 +85,6 @@ public class AdminController {
             userService.saveUser(user);
         }
         return new RedirectView("/admin/add");
-
     }
 
     @GetMapping("/admin/edit/{id}")

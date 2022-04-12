@@ -10,11 +10,23 @@ import java.util.List;
 @Service
 public class PupilServiceImpl implements PupilService {
 
-    @Autowired
-    PupilRepository pupilRepository;
+    final PupilRepository pupilRepository;
 
-    public void addPupil(Pupil pupil){
+    public PupilServiceImpl(PupilRepository pupilRepository) {
+        this.pupilRepository = pupilRepository;
+    }
+
+    public boolean addPupil(Pupil pupil){
+
+        Pupil pupilDb = pupilRepository.findByFirstNameAndLastNameAndClassP(
+                pupil.getFirstName(), pupil.getLastName(), pupil.getClassP());
+
+        if(pupilDb != null) {
+            return false;
+        }
+
         pupilRepository.save(pupil);
+        return true;
     }
 
     @Override

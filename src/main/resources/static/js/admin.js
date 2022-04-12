@@ -112,7 +112,7 @@ $(document).on("click", ".btnDeleteClass", function (){
     },
     dataType: 'json',
     success: function (data){
-      if(data.data === "null")
+      if(data.data === "")
         button.parent().parent().parent().remove();
       else {
         button.parent().parent().prev().text('[' + data.data.join(", ") + ']');
@@ -130,7 +130,9 @@ $(document).on("click", ".buttonAddClass", function (){
   let selectSubject = $(this).parent().find("#selectSubject").val();
   let classP = $(this).parent().find("#classP").val();
   let url = $(this).data("value");
+  let button = $(this);
 
+  let root = button.parent().parent();
 
   $.ajax({
     url: url,
@@ -146,19 +148,19 @@ $(document).on("click", ".buttonAddClass", function (){
       for(let i = 0; i < result.data.length; i++)
         options += "<option>"+ result.data[i] + "</option>";
 
-      let element = null;
-
-      let elems = $(".subject");
-      for(let i = 0; i < elems.length; i++) {
-        if($(elems[i]).text() === selectSubject) {
-          element = $(elems[i]);
+      let element = root.find(".subject");
+      let elem = null;
+      for(let i = 0; i < element.length; i++){
+        if( $(element[i]).text() === selectSubject) {
+          elem = $(element[i]);
         }
       }
+
 
       let html = `
   <tr>
     <td>
-      <button data-value="` + url.replace("add", "delete").replace("class", "subject") + `" class="btnDeleteSubject btn btn-danger btn-sm">Удалить</button>
+      <button data-value="`+url.replace("add", "delete").replace("class", "subject")+`" class="btnDeleteSubject btn btn-danger btn-sm">Удалить</button>
     </td>
     <td class="subject">` + selectSubject + `</td>
     <td>[` + result.data.join(", ") + `]</td>
@@ -172,8 +174,8 @@ $(document).on("click", ".buttonAddClass", function (){
     </td>
   </tr`
 
-      if(element != null) element.parent().replaceWith(html);
-      else $(".teachers").append(html);
+      if(elem != null) elem.parent().replaceWith(html);
+      else root.find(".teachers").append(html);
     }
   });
 });

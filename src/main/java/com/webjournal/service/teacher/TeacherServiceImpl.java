@@ -12,8 +12,11 @@ import java.util.*;
 @Service
 public class TeacherServiceImpl implements TeacherService {
 
-    @Autowired
-    TeacherRepository teacherRepository;
+    final TeacherRepository teacherRepository;
+
+    public TeacherServiceImpl(TeacherRepository teacherRepository) {
+        this.teacherRepository = teacherRepository;
+    }
 
 
     @Override
@@ -25,9 +28,7 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public Teacher changeTeacherClass(User user, String selectSubject, String classP) {
         Teacher teacher = user.getTeacher();
-        ArrayList<String> list = new ArrayList<>();
-        list.add(selectSubject);
-        teacher.addClassP(classP, list);
+        teacher.addClassP(classP, selectSubject);
 
         teacherRepository.save(teacher);
         return teacher;

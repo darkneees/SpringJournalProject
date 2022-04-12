@@ -41,7 +41,6 @@ $(document).on("click", ".accordion", function (){
 $(document).on("click", ".btn-post", function (){
 
     $(".pupilContent").children().remove();
-
     let selectedClass = $("#selectedClass").val();
     let selectedSubject = $("#selectedSubject").val();
     let url = $(this).data("value");
@@ -65,7 +64,7 @@ $(document).on("click", ".btn-post", function (){
                                 <tr>
                                 <td class="dates names" scope="col">`+ key +`</td>
                                 <td class="names" scope="col">`+ result.data[i].data[selectedSubject][d][key] +`</td>
-                                <td class="names" scope="col"><span><button data-value="/teacher/pupils/delete/mark" class="btnDeleteMark btn btn-danger btn-sm">Удалить</button></span></td>
+                                <td class="names" scope="col"><span><button data-value="/teacher/pupils/delete/mark/` + result.data[i].id +`" class="btnDeleteMark btn btn-danger btn-sm">Удалить</button></span></td>
                                 </tr>
                             `
                         }
@@ -73,7 +72,7 @@ $(document).on("click", ".btn-post", function (){
                 }
 
                 let html = `
-                <div id="` + result.data[0].id + `" class="accordion-contianer">
+                <div class="accordion-contianer">
                 <button class="accordion">`+ name +`</button>
                 <div class="panel">
                 <span style="margin-top: 10px" class="labelAndSelect">
@@ -82,7 +81,7 @@ $(document).on("click", ".btn-post", function (){
                            type="date" id="date" name="date" min="2022-01-01" max="2023-12-31"/>
                     <label for="mark">Оценка</label>
                     <input type="text" style="width: 40px" id="mark" name="mark">
-                        <a data-value="/teacher/pupil/mark" style="vertical-align: baseline;" class="btn btn-dark btn-sm btn-mark">Поставить оценку</a>
+                        <a data-value="/teacher/pupil/mark/` + result.data[i].id +`" style="vertical-align: baseline;" class="btn btn-dark btn-sm btn-mark">Поставить оценку</a>
                     </span>
                     <table class="table table-primary mt-5">
                         <thead class="table-dark">
@@ -107,10 +106,10 @@ $(document).on("click", ".btn-post", function (){
 $(document).on("click", ".btn-mark", function (){
 
     let button = $(this);
+    let root = button.parent().parent();
 
-    let id = button.parents().find(".accordion-contianer").attr("id");
-    let date = button.parents().find("#date").val();
-    let mark = button.parents().find("#mark").val();
+    let date = root.find("#date").val();
+    let mark = root.find("#mark").val();
     let selectedSubject = $("#selectedSubject").val();
     let url = $(this).data("value");
 
@@ -119,7 +118,6 @@ $(document).on("click", ".btn-mark", function (){
         url: url,
         method: 'post',
         data: {
-            "id": id,
             "selectedSubject": selectedSubject,
             "date": date,
             "mark": mark
@@ -140,7 +138,7 @@ $(document).on("click", ".btn-mark", function (){
                 <td class="names" scope="col">`+ result.mark +`</td>
                 <td class="names" scope="col">
                      <span>
-                    <button data-value="/teacher/pupils/delete/mark" class="btnDeleteMark btn btn-danger btn-sm">Удалить</button>
+                    <button data-value="/teacher/pupils/delete/mark/` + result.id +`" class="btnDeleteMark btn btn-danger btn-sm">Удалить</button>
                     </span>
                 </td>
                                 
@@ -157,7 +155,6 @@ $(document).on("click", ".btn-mark", function (){
 $(document).on("click", ".btnDeleteMark", function (){
 
     let button = $(this);
-    let id = button.parents().find(".accordion-contianer").attr("id");
     let date = button.parent().parent().parent().find(".dates").text();
     let selectedSubject = $("#selectedSubject").val();
     let root = button.parent().parent().parent();
@@ -167,7 +164,6 @@ $(document).on("click", ".btnDeleteMark", function (){
         url: url,
         method: 'post',
         data:{
-            "id": id,
             "selectedSubject": selectedSubject,
             "date": date
         },

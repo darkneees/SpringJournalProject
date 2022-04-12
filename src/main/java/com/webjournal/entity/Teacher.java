@@ -40,17 +40,19 @@ public class Teacher {
         this.classP = classP;
     }
 
-    public void addClassP(String key, ArrayList<String> values){
+    public void addClassP(String key, String value){
         if(classP == null) {
             classP = new HashMap<>();
-            classP.put(key, values);
+            classP.put(key, new ArrayList<>(List.of(value)));
         } else {
-            if(classP.containsKey(key)){
+            if(classP.containsKey(key)) {
                 ArrayList<String> list = classP.get(key);
-                list.addAll(values);
-                classP.replace(key, list);
+                if(!list.contains(value)) {
+                    list.add(value);
+                    classP.replace(key, list);
+                }
             } else {
-            classP.put(key, values);
+            classP.put(key, new ArrayList<>(List.of(value)));
             }
         }
     }

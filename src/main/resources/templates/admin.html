@@ -26,18 +26,6 @@
     </nav>
 </div>
 
-<div style="display: none;" id="listAdmins">
-    <div th:each="admin: ${admins}" class="ticket p-3 rounded cont">
-            <span>
-                <button class="mt-2 float-end btn btn-danger btn-sm btnDelete" th:attr="data-value='/admin/delete/' + ${admin.id}">Удалить</button>
-                <a class="mt-2 me-2 float-end btn btn-success btn-sm" th:href="@{'/admin/edit/' + ${admin.id}}">Редактировать</a>
-                <h3 th:text="${admin.firstName} + ' ' + ${admin.lastName}"></h3><br>
-                <img class="avatar" th:src="@{/images/avatar.png}">
-            </span>
-    </div>
-    </div>
-</div>
-
 <div style="display: none;" id="listTeachers">
     <div th:each="teacher: ${teachers}" class="ticket p-3 rounded cont">
             <span>
@@ -46,14 +34,9 @@
                 <h3 th:text="${teacher.firstName} + ' ' + ${teacher.lastName}"></h3><br>
                 <img class="avatar" th:src="@{/images/avatar.png}">
                 <select class="form-select mt-3" id="selectSubject" name="selectSubject">
-                    <option>Математика</option>
-                    <option>Русский язык</option>
-                    <option>Английский язык</option>
-                    <option>Химия</option>
-                    <option>Физика</option>
-                    <option>Физкультура</option>
+                    <option th:each="s : ${T(com.webjournal.entity.Subjects).values()}" th:value="${s.displayName}" th:text="${s.displayName}"></option>
                 </select>
-                <label for="classP">Введите класс</label>
+                <label for="classP">Введите класс(Английские символы)</label>
                 <input type="text" class="form-control" id="classP" name="classP" placeholder="Введите класс...">
                 <button th:attr="data-value='/admin/add/class/' + ${teacher.id}" class="buttonAddClass elementsForm btn btn-primary btn-sm mt-3">Добавить</button>
             </span>

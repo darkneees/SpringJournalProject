@@ -5,7 +5,6 @@ import com.webjournal.entity.User;
 import com.webjournal.repository.RoleRepository;
 import com.webjournal.repository.TeacherRepository;
 import com.webjournal.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -23,14 +22,17 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     @PersistenceContext
     private EntityManager em;
 
-    @Autowired
-    UserRepository userRepository;
+    final UserRepository userRepository;
 
-    @Autowired
-    RoleRepository roleRepository;
+    final RoleRepository roleRepository;
 
-    @Autowired
-    TeacherRepository teacherRepository;
+    final TeacherRepository teacherRepository;
+
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, TeacherRepository teacherRepository) {
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+        this.teacherRepository = teacherRepository;
+    }
 
 
     @Override

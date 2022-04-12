@@ -55,22 +55,22 @@ public class TeacherController {
         return Map.of("result", "success", "data", list);
     }
 
-    @PostMapping("/teacher/pupil/mark")
+    @PostMapping("/teacher/pupil/mark/{id}")
     @ResponseBody
-    public Map<String, String> addPupilMark(@RequestParam("id") Long id,
+    public Map<String, String> addPupilMark(@PathVariable Long id,
                                             @RequestParam("selectedSubject") String selectedSubject,
                                             @RequestParam("date") String date,
                                             @RequestParam("mark") String mark){
 
         pupilService.addMarkPupil(id, selectedSubject, date, mark);
 
-        return Map.of("result", "success", "date", date, "mark", mark);
+        return Map.of("result", "success", "date", date, "mark", mark, "id", String.valueOf(id));
 
     }
 
-    @PostMapping("/teacher/pupils/delete/mark")
+    @PostMapping("/teacher/pupils/delete/mark/{id}")
     @ResponseBody
-    public Map<String, String> deleteMark(@RequestParam("id") Long id,
+    public Map<String, String> deleteMark(@PathVariable Long id,
                                           @RequestParam("selectedSubject") String selectedSubject,
                                           @RequestParam("date") String date){
 

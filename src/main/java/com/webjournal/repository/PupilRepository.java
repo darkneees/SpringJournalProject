@@ -10,4 +10,5 @@ import java.util.List;
 public interface PupilRepository extends JpaRepository<Pupil, Long> {
 
     List<Pupil> findAllByClassP(String classP);
+    Pupil findByFirstNameAndLastNameAndClassP(String firstName, String lastName, String classP);
 }
